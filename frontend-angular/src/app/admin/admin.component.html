@@ -1,0 +1,27 @@
+<!-- admin.component.html -->
+<!-- admin.component.html -->
+<div class="admin-dashboard">
+  <h2>Admin Dashboard</h2>
+
+  <section class="contact-section">
+    <h3>Contacts</h3>
+    <div class="contact-list">
+      <div *ngFor="let contact of contacts" class="contact-item">
+        <p><strong>Name:</strong> {{ contact.name }}</p>
+        <p><strong>Email:</strong> {{ contact.email }}</p>
+        <p><strong>Message:</strong> {{ contact.message }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reservation-section">
+    <h3>Reservations</h3>
+    <div class="reservation-list">
+      <div *ngFor="let reservation of reservations" class="reservation-item">
+        <p><strong>Name:</strong> {{ reservation.name }}</p>
+        <p><strong>Venue:</strong> {{ reservation.venue }}</p>
+        <p><strong>Date:</strong> {{ reservation.date }}</p>
+      </div>
+    </div>
+  </section>
+</div>

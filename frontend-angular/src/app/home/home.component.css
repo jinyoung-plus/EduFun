@@ -1,0 +1,82 @@
+/* src/app/home/home.component.css */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh; /* Adjust the height as necessary */
+    background: url("/assets/main1.png") no-repeat center center;
+    background-size: cover;
+    text-align: center;
+    position: relative;
+}
+
+/* Overlay for better readability */
+.hero::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust the color and opacity as needed */
+    z-index: 0;
+}
+
+/* Text styles for better visibility */
+.hero h1 {
+    font-size: 2.5rem; /* Adjust the size as needed */
+    color: #fff;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.hero p {
+    font-size: 1rem; /* Adjust the size as needed */
+    color: #fff;
+    margin-bottom: 2rem;
+    z-index: 1;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #ff9900; /* This is just an example; choose a color that fits your theme */
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #cc7a00; /* Darker shade for hover effect */
+}
+
+/* Ensure that other elements are layered above the overlay */
+.hero * {
+    position: relative;
+}
+
+
+/* Introduction Section Enhancements */
+.introduction {
+    color: #333; /* Darker font color for contrast */
+    padding: 4rem 0; /* More vertical padding */
+    text-align: center; /* Center align the text */
+}
+
+.introduction h2 {
+    font-size: 2rem; /* Larger font size for heading */
+    font-weight: bold; /* Bolder font weight for heading */
+    margin-bottom: 1rem; /* Space below the heading */
+}
+
+.introduction p {
+    font-size: 1rem; /* Comfortable font size for paragraph */
+    margin-bottom: 2rem; /* Space above the call-to-action */
+}

@@ -1,0 +1,21 @@
+/* 전역 styles.css 파일 */
+
+/* 헤더 배경색 설정 */
+header, .header, .navbar {
+  background-color: #FFFFF0 !important; /* 진한 상아색 */
+}
+
+/* 헤더 내 링크 스타일 설정 */
+header a, .header a, .navbar a { /* 실제 헤더 내 링크의 클래스 이름에 따라 조정해주세요. */
+  font-size: 1.1rem; /* 글자 크기 */
+  margin-right: 20px; /* 오른쪽 마진으로 간격 조정 */
+  color: #333; /* 글자 색상 */
+  text-decoration: none; /* 밑줄 없애기 */
+}
+
+/* 링크에 마우스를 올렸을 때 추가 스타일 */
+header a:hover, .header a:hover, .navbar a:hover {
+  text-decoration: underline; /* 밑줄 표시 */
+  color: #000; /* 글자 색상 어둡게 */
+}
+/* You can add global styles to this file, and also import other style files */

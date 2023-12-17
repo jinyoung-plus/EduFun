@@ -1,0 +1,73 @@
+
+
+<!-- 예약 폼 -->
+<div class="reservation-container">
+  <!-- 예약 성공 메시지를 표시하는 영역 -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <h1>Make a Reservation</h1>
+  <form [formGroup]="reservationForm" (ngSubmit)="submitReservation()">
+    <!-- Venue selection -->
+    <div class="form-group">
+      <label for="venue">Choose a Venue:</label>
+      <select id="venue" formControlName="venue" required>
+        <option value="">--Select a venue--</option>
+        <!-- Dynamically generated options will go here -->
+        <option value="venue1">room 1</option>
+        <option value="venue2">room 2</option>
+        <option value="venue3">room 3</option>
+        <option value="venue4">room 4</option>
+        <option value="venue5">room 5</option>
+        <option value="venue6">room 6</option>
+      </select>
+    </div>
+
+    <!-- Date selection -->
+    <div class="form-group">
+      <label for="date">Reservation Date:</label>
+      <input type="date" id="date" formControlName="date" required>
+    </div>
+
+    <!-- Time selection -->
+    <div class="form-group">
+      <label for="time">Reservation Time:</label>
+      <input type="time" id="time" formControlName="time" required>
+    </div>
+
+    <!-- Name input -->
+    <div class="form-group">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" formControlName="name" placeholder="Full Name" required>
+    </div>
+
+    <!-- Email input -->
+    <div class="form-group">
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" formControlName="email" placeholder="email@example.com" required>
+    </div>
+
+    <!-- Phone input -->
+    <div class="form-group">
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" formControlName="phone" placeholder="+1 (555) 123-4567" required>
+    </div>
+
+    <!-- Number of guests input -->
+    <div class="form-group">
+      <label for="guests">Number of Guests:</label>
+      <input type="number" id="guests" formControlName="guests" min="1" max="100" required>
+    </div>
+
+    <!-- Special requests input -->
+    <div class="form-group">
+      <label for="special-requests">Special Requests:</label>
+      <textarea id="special-requests" formControlName="specialRequests" rows="4" placeholder="Any special requests or considerations..."></textarea>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary">Submit Reservation</button>
+
+  </form>
+
+</div>
