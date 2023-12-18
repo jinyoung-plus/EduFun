@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #FFFFF0; /* 진한 상아색 */
+  background-color: #fff7e1; /* #FFFFF0; 진한 상아색 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,7 +56,7 @@
   color: #ff9900; /* Highlight color on hover */
 }
 
-.header-right .admin-button {
+.header-right .user-button {
   padding: 10px 20px;
   background-color: #003300;
   color: #fff;
@@ -65,7 +65,7 @@
   transition: background-color 0.3s;
 }
 
-.header-right .admin-button:hover {
+.header-right .user-button:hover {
   background-color: #ff9900;
 }
 

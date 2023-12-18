@@ -19,7 +19,8 @@ import { HomeComponent } from './home/home.component'; // Adjust the path as nec
 import { ReservationService } from './reservation.service';
 import { ContactService } from './contact.service';
 import { LoginComponent } from './login/login.component';
-import { AdminComponent } from './admin/admin.component'; // ContactService 임포트
+import { AdminComponent } from './admin/admin.component';
+import { SignupComponent } from './signup/signup.component'; // ContactService 임포트
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AdminComponent } from './admin/admin.component'; // ContactService 임�
     MakeReservationComponent,
     HomeComponent,
     LoginComponent,
-    AdminComponent, // Uncomment if you have this component
+    AdminComponent,
+    SignupComponent, // Uncomment if you have this component
   ],
   imports: [
     BrowserModule,
