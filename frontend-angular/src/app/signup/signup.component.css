@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
   max-width: 400px;
   margin: 5rem auto;
   padding: 2rem;
@@ -8,7 +8,7 @@
   text-align: center;
 }
 
-.login-container h1 {
+.signup-container h1 {
   margin-bottom: 1.5rem;
 }
 
@@ -30,7 +30,7 @@
   box-sizing: border-box; /* Prevents the input from exceeding the container width */
 }
 
-.btn-login {
+.btn-signup {
   background-color: #003300;
   color: white;
   border: none;
@@ -42,6 +42,6 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-login:hover {
+.btn-signup:hover {
   background-color: #ff9900;
 }

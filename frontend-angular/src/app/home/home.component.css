@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 60vh; /* Adjust the height as necessary */
+    height: 40vh; /* Adjust the height as necessary */
     background: url("/assets/main1.png") no-repeat center center;
     background-size: cover;
     text-align: center;

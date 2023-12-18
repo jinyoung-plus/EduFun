@@ -20,7 +20,12 @@ import { ReservationService } from './reservation.service';
 import { ContactService } from './contact.service';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
-import { SignupComponent } from './signup/signup.component'; // ContactService 임포트
+import { SignupComponent } from './signup/signup.component';
+import { DeckComponent } from './deck/deck.component';
+import { AddComponent } from './add/add.component';
+import { SearchComponent } from './search/search.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { SynchronizationComponent } from './synchronization/synchronization.component'; // ContactService 임포트
 
 @NgModule({
   declarations: [
@@ -33,7 +38,12 @@ import { SignupComponent } from './signup/signup.component'; // ContactService �
     HomeComponent,
     LoginComponent,
     AdminComponent,
-    SignupComponent, // Uncomment if you have this component
+    SignupComponent,
+    DeckComponent,
+    AddComponent,
+    SearchComponent,
+    StatisticsComponent,
+    SynchronizationComponent, // Uncomment if you have this component
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 // EduFun/src/models/models.js
 
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('postgres://gong:1234@localhost:5432/mydb');
+const sequelize = new Sequelize('postgres://funedu:1234@localhost:5432/funedudb');
 
 const LearningPackage = sequelize.define('User', {
   user_id: {
