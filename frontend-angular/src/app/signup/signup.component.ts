@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrl: './signup.component.css'
 })
 export class SignupComponent implements OnInit {
-  loginData = {
+  signupData = {
     username: '',
     password: ''
   };
@@ -17,8 +17,8 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onLogin(): void {
-    if (this.loginData.username === 'admin' && this.loginData.password === 'admingong') {
+  onSignup(): void {
+    if (this.signupData.username === 'admin' && this.signupData.password === 'admingong') {
       // 로그인 성공, admin 페이지로 이동
       this.router.navigate(['/admin']);
     } else {
