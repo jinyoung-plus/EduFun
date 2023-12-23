@@ -116,7 +116,22 @@ app.get('/reservations', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+app.post('/words', async (req, res) => {
+  try {
+    const { frontend, backend } = req.body;
+
+    // 트랜잭션을 사용하여 데이터베이스 작업 수행
+    const newWord = await Word.create({ frontend, backend });
+
+    console.log(`New word added: ${newWord.frontend} - ${newWord.backend}`);
+    res.status(201).json(newWord);
+  } catch (error) {
+    console.error('Error saving word', error);
+    res.status(500).json({ message: 'Error saving word.' });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
