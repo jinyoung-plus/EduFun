@@ -1,1 +1,15 @@
-<p>add works!</p>
+<!-- add.component.html -->
+<div class="add-container">
+  <h1>Add Word</h1>
+  <form (ngSubmit)="onSave()">
+    <div class="form-group">
+      <label for="frontend">Frontend:</label>
+      <input type="text" id="frontend" class="form-control" [(ngModel)]="wordData.frontend" name="frontend" required>
+    </div>
+    <div class="form-group">
+      <label for="backend">Backend:</label>
+      <input type="text" id="backend" class="form-control" [(ngModel)]="wordData.backend" name="backend" required>
+    </div>
+    <button type="submit" class="btn-save">Save</button>
+  </form>
+</div>

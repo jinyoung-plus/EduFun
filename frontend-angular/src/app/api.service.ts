@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 // EduFun/frontend-angular/src/app/api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Card } from './card.model'; // 'Card' 인터페이스 임포트
+=======
+// api.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+>>>>>>> 2bef0d337ba1be9af7f9a79a70dd3cab85f37d25
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+<<<<<<< HEAD
   private BASE_URL = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
@@ -140,4 +148,14 @@ export class ApiService {
   }
 
   // ... other API methods
+=======
+  private apiUrl = 'http://localhost:3000/add'; // 백엔드 API URL로 대체
+
+  constructor(private http: HttpClient) { }
+
+  saveWord(wordData: any): Observable<any> {
+    // 백엔드 서버로 데이터 전송
+    return this.http.post(`${this.apiUrl}/saveWord`, wordData);
+  }
+>>>>>>> 2bef0d337ba1be9af7f9a79a70dd3cab85f37d25
 }

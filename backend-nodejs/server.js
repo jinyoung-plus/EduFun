@@ -72,6 +72,99 @@ sequelize.sync({ force: false }).then(() => {
   console.log('Database & tables created!');
 });
 
+<<<<<<< HEAD
+=======
+// 예약 엔드포인트 추가
+app.post('/reservations', async (req, res) => {
+  console.log('Received reservation data:', req.body);
+  const t = await sequelize.transaction();
+
+  try {
+    // req.body에서 예약 데이터 추출
+    const {
+      venue,
+      date, // 'date' 변수를 올바르게 사용
+      time, // 'time' 변수를 올바르게 사용
+      name,
+      email,
+      phone,
+      guests, // 'guests'는 'number_of_guests'로 변환해야 할 수도 있습니다.
+      specialRequests
+    } = req.body;
+
+    // 트랜잭션을 사용하여 Reservation 테이블에 새 예약 데이터 저장
+    const newReservation = await Reservation.create({
+      venue,
+      reservation_date: date, // 'date' 값을 'reservation_date' 필드에 할당
+      reservation_time: time, // 'time' 값을 'reservation_time' 필드에 할당
+      name,
+      email,
+      phone,
+      number_of_guests: guests, // 'guests' 값을 'number_of_guests' 필드에 할당
+      special_requests: specialRequests
+    }, { transaction: t });
+
+    await t.commit();
+    console.log(`New reservation added: ${newReservation.id}`);
+    res.status(201).send(newReservation);
+  } catch (error) {
+    await t.rollback();
+    console.error('Error during reservation transaction', error);
+    res.status(400).send(error);
+  }
+});
+
+app.post('/contacts', async (req, res) => {
+  try {
+    const newContact = await Contact.create({
+      name: req.body.name,
+      email: req.body.email,
+      message: req.body.message
+    });
+    res.status(201).json(newContact);
+  } catch (error) {
+    console.error('Error saving contact message:', error);
+    res.status(500).json({ message: 'Error saving contact message.' });
+  }
+});
+
+// 연락처 데이터를 가져오는 라우트
+app.get('/contacts', async (req, res) => {
+  try {
+    const contacts = await Contact.findAll(); // Sequelize를 사용할 경우
+    res.json(contacts);
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
+// 예약 데이터를 가져오는 라우트
+app.get('/reservations', async (req, res) => {
+  try {
+    const reservations = await Reservation.findAll();
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error('Error fetching reservations', error);
+    res.status(500).json({ message: 'Error fetching reservations.' });
+  }
+});
+
+app.post('/words', async (req, res) => {
+  try {
+    const { frontend, backend } = req.body;
+
+    // 트랜잭션을 사용하여 데이터베이스 작업 수행
+    const newWord = await Word.create({ frontend, backend });
+
+    console.log(`New word added: ${newWord.frontend} - ${newWord.backend}`);
+    res.status(201).json(newWord);
+  } catch (error) {
+    console.error('Error saving word', error);
+    res.status(500).json({ message: 'Error saving word.' });
+  }
+});
+
+>>>>>>> 2bef0d337ba1be9af7f9a79a70dd3cab85f37d25
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
