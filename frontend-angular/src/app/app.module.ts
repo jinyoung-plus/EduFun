@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
-import { AddComponent } from './add/add.component';
 import { SearchComponent } from './search/search.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { SynchronizationComponent } from './synchronization/synchronization.component';
@@ -30,7 +29,6 @@ import { StudyComponent } from './study/study.component';
     LoginComponent,
     SignupComponent,
     HomeComponent,
-    AddComponent,
     SearchComponent,
     StatisticsComponent,
     SynchronizationComponent,

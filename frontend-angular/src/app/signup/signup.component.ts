@@ -10,11 +10,8 @@ import { ApiService } from '../api.service'; // Import the ApiService
 })
 export class SignupComponent implements OnInit {
   signupData = {
-<<<<<<< HEAD
     email: '',
-=======
     username: '',
->>>>>>> 2bef0d337ba1be9af7f9a79a70dd3cab85f37d25
     password: ''
   };
 
@@ -28,7 +25,6 @@ export class SignupComponent implements OnInit {
   }
 
   onSignup(): void {
-<<<<<<< HEAD
     // Use the ApiService for the signup process
     this.apiService.signup(this.signupData.email, this.signupData.password).subscribe({
       next: (_response) => {
@@ -47,14 +43,6 @@ export class SignupComponent implements OnInit {
         }
       }
     });
-=======
-    if (this.signupData.username === 'admin' && this.signupData.password === 'admingong') {
-      // 로그인 성공, admin 페이지로 이동
-      this.router.navigate(['/admin']);
-    } else {
-      // 로그인 실패, 에러 메시지 표시 등
-      console.error('Invalid login credentials');
-    }
->>>>>>> 2bef0d337ba1be9af7f9a79a70dd3cab85f37d25
+
   }
 }
