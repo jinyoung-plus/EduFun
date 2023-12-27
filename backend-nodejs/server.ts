@@ -1,56 +1,37 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr';
 import express from 'express';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';
-import AppServerModule from './src/main.server';
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import { sequelize, User } from './models/models'; // 모델 경로는 프로젝트에 따라 다를 수 있습니다.
 
-// The Express app is exported so that it can be used by serverless Functions.
-export function app(): express.Express {
-  const server = express();
-  const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-  const browserDistFolder = resolve(serverDistFolder, '../browser');
-  const indexHtml = join(serverDistFolder, 'index.server.html');
+const app = express();
 
-  const commonEngine = new CommonEngine();
+app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(express.json());
 
-  server.set('view engine', 'html');
-  server.set('views', browserDistFolder);
+app.post('/api/signup', async (req: express.Request, res: express.Response) => {
+    try {
+        const { email, password } = req.body as { email: string; password: string };
+        const hashedPassword = await bcrypt.hash(password, 10);
+        // User 모델이 올바른 타입을 가지고 있는지 확인해야 합니다.
+        const newUser = await User.create({ email, password: hashedPassword });
+        // Sequelize에서 create 메소드는 자동으로 id를 생성하므로, 타입 정의에서 id를 옵셔널로 처리해야 합니다.
+        res.status(201).json({ id: newUser.id, email: newUser.email });
+    } catch (error: any) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            res.status(409).json({ message: 'Email already exists.' });
+        } else {
+            console.error('Error during user signup:', error);
+            res.status(500).json({ message: 'Error during user signup.' });
+        }
+    }
+});
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  // Serve static files from /browser
-  server.get('*.*', express.static(browserDistFolder, {
-    maxAge: '1y'
-  }));
+sequelize.sync({ force: false }).then(() => {
+    console.log('Database & tables created!');
+});
 
-  // All regular routes use the Angular engine
-  server.get('*', (req, res, next) => {
-    const { protocol, originalUrl, baseUrl, headers } = req;
+const port = process.env['PORT'] || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 
-    commonEngine
-      .render({
-        bootstrap: AppServerModule,
-        documentFilePath: indexHtml,
-        url: `${protocol}://${headers.host}${originalUrl}`,
-        publicPath: browserDistFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
-      })
-      .then((html) => res.send(html))
-      .catch((err) => next(err));
-  });
-
-  return server;
-}
-
-function run(): void {
-  const port = process.env['PORT'] || 4000;
-
-  // Start up the Node server
-  const server = app();
-  server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
-}
-
-run();

@@ -1,14 +1,21 @@
+<!-- EduFun/frontend-angular/src/app/login/login.component.html -->
+
 <div class="login-container">
-  <h1>Log in</h1>
-  <form (ngSubmit)="onLogin()">
-    <div class="form-group">
-      <label for="username">User Email :</label>
-      <input type="text" id="username" class="form-control" [(ngModel)]="loginData.username" name="username" required>
-    </div>
-    <div class="form-group">
-      <label for="password">Password :</label>
-      <input type="password" id="password" class="form-control" [(ngModel)]="loginData.password" name="password" required>
-    </div>
-    <button type="submit" class="btn-login">Log in</button>
-  </form>
+    <h1>Log in</h1>
+    <form (ngSubmit)="onLogin()">
+        <!-- 이메일 입력 필드 -->
+        <div class="form-group">
+            <label for="email">User Email :</label>
+            <input type="email" id="email" name="email" class="form-control" [(ngModel)]="loginData.email" required autocomplete="email">
+        </div>
+
+        <!-- 비밀번호 입력 필드 -->
+        <div class="form-group">
+            <label for="password">Password :</label>
+            <input type="password" id="password" name="password" class="form-control" [(ngModel)]="loginData.password" required autocomplete="current-password">
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <button type="submit" class="btn-login">Log in</button>
+    </form>
 </div>

@@ -1,33 +1,39 @@
-import { Component } from '@angular/core';
-import { UserService } from './user.service';
+// EduFun/frontend-angular/src/app/app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './auth.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'EduFun';
-  userName: string = ''; // 사용자 이름을 저장할 변수
-  message: string = ''; // 사용자에게 표시할 메시지를 저장할 변수
+export class AppComponent implements OnInit {
+    isLoggedIn$: BehaviorSubject<boolean>; // Change to BehaviorSubject
+    userEmail$: BehaviorSubject<string | null>; // Change to BehaviorSubject
 
-  constructor(private userService: UserService) {} // UserService를 주입합니다.
+    constructor(private authService: AuthService) {
+        this.isLoggedIn$ = new BehaviorSubject<boolean>(false); // Initialize with a default value
+        this.userEmail$ = new BehaviorSubject<string | null>(null); // Initialize with a default value
+    }
 
-  saveName(): void {
-    console.log('Sending username to backend:', this.userName);
-    // Send the userName to the server and subscribe to the response
-    this.userService.saveUserName(this.userName).subscribe(
-      response => {
-        console.log('Response:', response);
-        this.message = '이름이 입력되었습니다.'; // 메시지 업데이트
-        this.userName = ''; // 입력 필드 초기화
-      },
-      error => {
-        console.error('Error:', error);
-        this.message = '오류가 발생했습니다. 다시 시도해 주세요.'; // 오류 메시지 설정
-      }
-    );
-  }
+    ngOnInit(): void {
+        this.checkLoginStatus();
+    }
+
+    checkLoginStatus(): void {
+        const token = localStorage.getItem('authToken');
+        const userEmail = localStorage.getItem('userEmail');
+        this.isLoggedIn$.next(!!token);
+        this.userEmail$.next(userEmail);
+    }
+
+    logout(): void {
+        this.authService.logout();
+        this.isLoggedIn$.next(false);
+        this.userEmail$.next(null);
+        // Handle redirection and page refresh if necessary
+    }
 }
 
 

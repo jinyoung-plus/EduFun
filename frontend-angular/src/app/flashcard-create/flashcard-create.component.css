@@ -1,0 +1,56 @@
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #198754;
+    color: white;
+    padding: 10px 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-select, .form-control {
+    width: 100%;
+    padding: .375rem 1.75rem .375rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    background-color: #198754;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.flashcard-list {
+    margin-top: 1rem;
+}
+
+.list-group-item {
+    border: 1px solid #ced4da;
+    margin-bottom: .125rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}

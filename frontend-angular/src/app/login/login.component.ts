@@ -1,5 +1,8 @@
+// EduFun/frontend-angular/src/app/login/login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service'; // Import the ApiService
 
 @Component({
   selector: 'app-login',
@@ -8,22 +11,71 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginData = {
-    username: '',
+    email: '',
     password: ''
   };
+  loginError = '';
 
-  constructor(private router: Router) { }
+  constructor(
+      private router: Router,
+      private apiService: ApiService, // Inject the ApiService
+      private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
   }
 
   onLogin(): void {
-    if (this.loginData.username === 'admin' && this.loginData.password === 'admingong') {
-      // 로그인 성공, admin 페이지로 이동
-      this.router.navigate(['/admin']);
-    } else {
-      // 로그인 실패, 에러 메시지 표시 등
-      console.error('Invalid login credentials');
-    }
+    // Use the ApiService for the login process
+    this.apiService.login(this.loginData.email, this.loginData.password).subscribe({
+      next: (response: any) => {
+        // Store user data in localStorage upon successful login
+        localStorage.setItem('user', JSON.stringify({ email: this.loginData.email, token: response.token }));
+
+        this.authService.setToken(response.token);
+        this.authService.setUserEmail(this.loginData.email);
+
+        // Navigate to a page that will show "Welcome, [User's Email]!"
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        let userAction: string | null;
+        switch (error.status) {
+          case 404:
+            userAction = window.confirm('Account not found. Do you want to sign up?') ? 'yes' : 'no';
+            if (userAction === 'yes') {
+              this.router.navigate(['/signup']);
+            } else {
+              this.router.navigate(['/login']);
+            }
+            break;
+          case 401:
+            userAction = window.confirm('Password is incorrect. Do you want to reset your password?') ? 'yes' : 'no';
+            if (userAction === 'yes') {
+              // Implement password reset logic here
+              this.router.navigate(['/reset-password'], { queryParams: { email: this.loginData.email } });
+            } else {
+              this.router.navigate(['/login']);
+            }
+            break;
+          default:
+            this.loginError = 'An unexpected error occurred. Please try again later.';
+            break;
+        }
+      }
+    });
+  }
+
+  // 로그아웃 함수를 정의합니다.
+  logout(): void {
+    // Call logout from AuthService to clear the user's session
+    this.authService.logout();
+
+    // Optionally check the user's logged-in status or perform other cleanup
+    // Navigate the user back to the home page or login page
+    this.router.navigate(['/login']).then(() => {
+      // Perform any additional operations after successful navigation if needed
+      window.location.reload(); // This is to refresh the app and clear any authenticated state
+    });
   }
 }

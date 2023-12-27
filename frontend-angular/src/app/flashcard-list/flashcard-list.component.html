@@ -1,0 +1,31 @@
+<!-- flashcard-list.component.html -->
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="card-header text-white">
+            <h2 class="text-center">Display Flashcards</h2>
+        </div>
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <label for="deckSelect">Select a Deck:</label>
+                <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId" (ngModelChange)="onDeckSelectChange($event)" name="deckSelect" required>
+                    <option value=null disabled selected>Please select a deck.</option>
+                    <option *ngFor="let deck of decks" [ngValue]="deck.id">{{ deck.name }}</option>
+                </select>
+            </div>
+            <div *ngIf="flashcards && flashcards.length > 0">
+                <h3 class="mb-3">Flashcards in Selected Deck:</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let flashcard of flashcards">
+                        <strong>Front:</strong> {{ flashcard.front }} <br>
+                        <strong>Back:</strong> {{ flashcard.back }}
+                    </li>
+                </ul>
+            </div>
+            <div *ngIf="!flashcards || flashcards.length === 0" class="text-center">
+                <p>No flashcards available. Add some!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+

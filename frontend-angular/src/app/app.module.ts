@@ -1,65 +1,60 @@
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+//frontend-angular/src/app/app.module.ts
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_ID } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';
+
 // Import your components here
-import { AboutUsComponent } from './about-us/about-us.component';
-import { OurVenuesComponent } from './our-venues/our-venues.component';
-import { EventsComponent } from './events/events.component';
-import { ContactComponent } from './contact/contact.component';
-import { MakeReservationComponent } from './make-reservation/make-reservation.component'; // Uncomment if you have this component
-import { UserService } from './user.service';
-import { HomeComponent } from './home/home.component'; // Adjust the path as necessary
-import { ReservationService } from './reservation.service';
-import { ContactService } from './contact.service';
 import { LoginComponent } from './login/login.component';
-import { AdminComponent } from './admin/admin.component';
 import { SignupComponent } from './signup/signup.component';
-import { DeckComponent } from './deck/deck.component';
+import { HomeComponent } from './home/home.component';
 import { AddComponent } from './add/add.component';
 import { SearchComponent } from './search/search.component';
 import { StatisticsComponent } from './statistics/statistics.component';
-import { SynchronizationComponent } from './synchronization/synchronization.component'; // ContactService 임포트
+import { SynchronizationComponent } from './synchronization/synchronization.component';
+import { DeckListComponent } from './deck-list/deck-list.component';
+import { DeckCreateComponent } from './deck-create/deck-create.component';
+import { FlashcardCreateComponent } from './flashcard-create/flashcard-create.component';
+import { FlashcardListComponent } from './flashcard-list/flashcard-list.component';
+import { FlashcardManagementComponent } from './flashcard-management/flashcard-management.component';
+import { DeckEditComponent } from './deck-edit/deck-edit.component';
+import { StudyComponent } from './study/study.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    AboutUsComponent,
-    OurVenuesComponent,
-    EventsComponent,
-    ContactComponent,
-    MakeReservationComponent,
-    HomeComponent,
     LoginComponent,
-    AdminComponent,
     SignupComponent,
-    DeckComponent,
+    HomeComponent,
     AddComponent,
     SearchComponent,
     StatisticsComponent,
-    SynchronizationComponent, // Uncomment if you have this component
+    SynchronizationComponent,
+    DeckListComponent,
+    DeckCreateComponent,
+    FlashcardCreateComponent,
+    FlashcardListComponent,
+    FlashcardManagementComponent,
+    DeckEditComponent,
+    StudyComponent,
+    // Add other components that are actually being used in your project
   ],
   imports: [
     BrowserModule,
-    HttpClientModule, // Enable `fetch` for HttpClient
-    ReactiveFormsModule,
+    HttpClientModule,
     FormsModule,
-    RouterModule,
-    AppRoutingModule,
-    NgbModule
+    AppRoutingModule
+    // You can remove NgbModule if you're not using ng-bootstrap components
+    // Remove RouterModule if you're not doing any manual routing configurations outside AppRoutingModule
   ],
   providers: [
-    // Provide your services here
-    ReservationService,
-    ContactService, // 프로바이더에 추가
-    UserService,
-    { provide: APP_ID, useValue: 'EduFun' } // 'EduFun'으로 실제 ID를 설정
+    // UserService should provide authentication related functions
+    // Other services that are actually being used in your project
+    // Remove services like ReservationService and ContactService if they are not used
   ],
   bootstrap: [AppComponent]
 })

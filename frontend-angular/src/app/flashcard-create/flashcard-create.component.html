@@ -1,0 +1,35 @@
+<!-- flashcard-create.component.html -->
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header text-white">
+            <h2 class="text-center">Add a Flashcard</h2>
+        </div>
+        <div class="card-body">
+            <form (submit)="addFlashcard()">
+                <div class="form-group mb-3">
+                    <label for="deckSelect">Select Deck:</label>
+                    <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId" name="deckSelect" required>
+                        <option value=null disabled selected>Please select a deck.</option>
+                        <option *ngFor="let deck of decks" [ngValue]="deck.id">{{ deck.name }}</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="front">Front:</label>
+                    <textarea id="front" class="form-control" placeholder="Please write the front of the card." [(ngModel)]="front" name="front" required></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="back">Back:</label>
+                    <textarea id="back" class="form-control" placeholder="Please write the back of the card." [(ngModel)]="back" name="back" required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+

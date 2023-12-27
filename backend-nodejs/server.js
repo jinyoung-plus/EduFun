@@ -1,119 +1,75 @@
-//EduFun/server.js
+// EduFun/backend-nodejs/server.js
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const { LearningPackage } = require('./models/models'); // Sequelize 모델
-const { sequelize } = require('./models/models'); // sequelize 객체를 가져와야 함
-const { Reservation } = require('./models/models'); // Reservation 모델을 가져와야 함
-const { Contact } = require('./models/models'); // 가정: Sequelize 모델을 사용한다고 가정합니다.
+const srsRoutes = require('./routes/srsRoutes'); // 라우트 파일 임포트
+const bcrypt = require('bcrypt');
+const { sequelize, User, Flashcard, StudySession, Review } = require('./models/models');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
-// CORS 미들웨어 사용 설정
-// 개발 단계에서 모든 도메인의 요청을 허용하거나, 특정 도메인에 대해서만 허용 설정
-app.use(cors({
-  origin: 'http://localhost:4200' // 프론트엔드 서버의 URL
-}));
+// Controller 모듈 가져오기
+const AuthController = require('./controllers/AuthController');
+const flashcardController = require('./controllers/flashcardController');
+const StudySessionController = require('./controllers/StudySessionController');
+const ReviewController = require('./controllers/ReviewController');
+const deckController = require('./controllers/deckController');
 
-app.use(bodyParser.json());
-// ... 나머지 서버 설정 및 라우트
 
-app.post('/users', async (req, res) => {
-  console.log('Received username from frontend:', req.body.username); // 로그 추가
-  const t = await sequelize.transaction(); // 트랜잭션 시작
+// JWT 검증 미들웨어
+const jwtMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ errorCode: 'NO_AUTH_HEADER', message: 'No authentication token provided.' });
+  }
+
+  const token = authHeader.split(' ')[1]; // "Bearer TOKEN"에서 TOKEN 부분을 가져옵니다.
+  if (!token) {
+    return res.status(401).send({ errorCode: 'NO_TOKEN', message: 'Authentication token is not provided.' });
+  }
 
   try {
-    const { username } = req.body;
-    // 트랜잭션을 사용하여 데이터베이스 작업 수행
-    const newUser = await LearningPackage.create({ username }, { transaction: t });
-
-    await t.commit(); // 트랜잭션 커밋
-    console.log(`New user added: ${newUser.username}`);
-    res.status(201).send(newUser);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-here');
+    req.user = decoded;
+    next();
   } catch (error) {
-    await t.rollback(); // 트랜잭션 롤백
-    console.error('Error during transaction', error);
-    res.status(400).send(error);
+    return res.status(403).send({ errorCode: 'INVALID_TOKEN', message: 'Invalid authentication token.' });
   }
-});
-// 데이터베이스 동기화 코드 추가
+};
+
+app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(express.json());
+
+// API 라우트 등록
+app.use('/api', srsRoutes);
+
+// 회원가입 및 로그인 라우트
+app.post('/signup', AuthController.signup);
+app.post('/login', AuthController.login);
+
+// 데크 관련 라우트
+app.post('/decks', jwtMiddleware, deckController.createDeck);
+app.get('/decks', jwtMiddleware, deckController.getDecks);
+app.put('/decks/:deckId', jwtMiddleware, deckController.updateDeck);
+app.delete('/decks/:deckId', jwtMiddleware, deckController.deleteDeck);
+
+// Flashcards 관련 라우트
+app.get('/decks/:deckId/flashcards', jwtMiddleware, flashcardController.getForDeck);
+app.get('/flashcards', jwtMiddleware, flashcardController.getAll);
+app.post('/flashcards', jwtMiddleware, flashcardController.create);
+app.put('/flashcards/:id', jwtMiddleware, flashcardController.update);
+app.delete('/flashcards/:id', jwtMiddleware, flashcardController.delete);
+
+// Study Sessions 관련 라우트
+app.post('/study-sessions', jwtMiddleware, StudySessionController.create);
+app.put('/study-sessions/:id', jwtMiddleware, StudySessionController.end);
+
+// Reviews 관련 라우트
+app.post('/reviews', jwtMiddleware, ReviewController.create);
+
+// 데이터베이스 동기화 및 서버 시작
 sequelize.sync({ force: false }).then(() => {
   console.log('Database & tables created!');
-});
-
-// 예약 엔드포인트 추가
-app.post('/reservations', async (req, res) => {
-  console.log('Received reservation data:', req.body);
-  const t = await sequelize.transaction();
-
-  try {
-    // req.body에서 예약 데이터 추출
-    const {
-      venue,
-      date, // 'date' 변수를 올바르게 사용
-      time, // 'time' 변수를 올바르게 사용
-      name,
-      email,
-      phone,
-      guests, // 'guests'는 'number_of_guests'로 변환해야 할 수도 있습니다.
-      specialRequests
-    } = req.body;
-
-    // 트랜잭션을 사용하여 Reservation 테이블에 새 예약 데이터 저장
-    const newReservation = await Reservation.create({
-      venue,
-      reservation_date: date, // 'date' 값을 'reservation_date' 필드에 할당
-      reservation_time: time, // 'time' 값을 'reservation_time' 필드에 할당
-      name,
-      email,
-      phone,
-      number_of_guests: guests, // 'guests' 값을 'number_of_guests' 필드에 할당
-      special_requests: specialRequests
-    }, { transaction: t });
-
-    await t.commit();
-    console.log(`New reservation added: ${newReservation.id}`);
-    res.status(201).send(newReservation);
-  } catch (error) {
-    await t.rollback();
-    console.error('Error during reservation transaction', error);
-    res.status(400).send(error);
-  }
-});
-
-app.post('/contacts', async (req, res) => {
-  try {
-    const newContact = await Contact.create({
-      name: req.body.name,
-      email: req.body.email,
-      message: req.body.message
-    });
-    res.status(201).json(newContact);
-  } catch (error) {
-    console.error('Error saving contact message:', error);
-    res.status(500).json({ message: 'Error saving contact message.' });
-  }
-});
-
-// 연락처 데이터를 가져오는 라우트
-app.get('/contacts', async (req, res) => {
-  try {
-    const contacts = await Contact.findAll(); // Sequelize를 사용할 경우
-    res.json(contacts);
-  } catch (error) {
-    res.status(500).send('Server error');
-  }
-});
-
-// 예약 데이터를 가져오는 라우트
-app.get('/reservations', async (req, res) => {
-  try {
-    const reservations = await Reservation.findAll();
-    res.status(200).json(reservations);
-  } catch (error) {
-    console.error('Error fetching reservations', error);
-    res.status(500).json({ message: 'Error fetching reservations.' });
-  }
 });
 
 const PORT = process.env.PORT || 3000;

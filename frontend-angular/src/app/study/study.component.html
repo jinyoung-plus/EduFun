@@ -1,0 +1,51 @@
+<!-- study.component.html -->
+<div class="container">
+    <header class="header_ss">
+        <h1>Let's Study</h1>
+    </header>
+
+    <section class="study-session">
+        <!-- Deck selection section -->
+        <div class="deck-selection">
+            <label for="deckSelect">Select a Deck:</label>
+            <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId">
+                <option value=null disabled selected>Choose a deck to study...</option>
+                <option *ngFor="let deck of decks" [value]="deck.id">{{ deck.name }}</option>
+            </select>
+            <button class="start-btn" (click)="startStudy()">Start Study</button>
+        </div>
+
+        <!-- Title for selected deck -->
+        <h2 class="deck-title">{{ selectedDeck?.name }}</h2>
+
+        <!-- Card container -->
+        <div class="card-container">
+            <div class="card front">
+                <p *ngIf="currentCard">{{ currentCard.front }}</p>
+                <p *ngIf="!currentCard">&nbsp;</p>
+            </div>
+            <div class="card back">
+                <p *ngIf="showAnswerFlag">{{ currentCard?.back }}</p>
+                <p *ngIf="!showAnswerFlag">&nbsp;</p>
+            </div>
+        </div>
+
+        <!-- Review buttons -->
+        <div class="review-buttons">
+            <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Answer</button>
+            <button class="btn success" *ngIf="showAnswerFlag && currentCard?.id" (click)="reviewCard(currentCard!.id, 3)">Got it!</button>
+            <button class="btn danger" *ngIf="showAnswerFlag && currentCard?.id" (click)="reviewCard(currentCard!.id, 1)">Missed it!</button>
+        </div>
+
+        <!-- Button container for navigation and actions -->
+        <div class="navigation-buttons">
+            <button class="prev-btn" (click)="previousCard()">« Previous Card</button>
+            <button class="next-btn" (click)="nextCard()">Next Card »</button>
+        </div>
+
+        <!-- This div is to provide spacing for the 'End Session' button -->
+        <div class="end-session-spacing"></div>
+        <button class="end-btn" (click)="endSession()">End Session</button>
+
+    </section>
+</div>

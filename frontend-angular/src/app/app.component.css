@@ -4,8 +4,16 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #fff7e1; /* #FFFFF0; 진한 상아색 */
+  background-color: #198754;
+  color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-text {
+  font-weight: bold;
+  font-size: 1.1rem; /* Adjust the size as needed */
+  color: #FF6600;
+  margin-right: 20px; /* Adds space between the welcome text and the logout button */
 }
 
 .logo img {
@@ -26,10 +34,11 @@
 
 .navigation ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: 20px; /* Space between navigation items */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  flex-wrap: wrap; /* Allows items to wrap to next line */
+  gap: 10px; /* Reduced gap for small screens */
 }
 
 .navigation {
@@ -69,19 +78,42 @@
   background-color: #ff9900;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments for header layout */
 @media (max-width: 768px) {
-  .navigation ul {
-    flex-direction:column;
+  .header {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 1rem; /* Adjust padding as necessary */
+  }
+
+  .navigation {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem; /* Create space between the navigation and the logout button */
+  }
+
+  .navigation li {
+    margin-bottom: 0.5rem; /* Adjust the space between navigation items */
+  }
+
+  .header-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
   }
 
-  .header {
-    flex-direction: row;
+  .header-right .welcome-text,
+  .header-right .user-button {
+    margin-bottom: 0.5rem; /* Adjust the space between the welcome text and the logout button */
   }
+}
 
-  .logo img {
-    margin-bottom: 10px; /* Add space between logo and navigation on small screens */
+/* Responsive adjustments for main content layout */
+@media (max-width: 768px) {
+  .hero, main {
+    padding-top: 2rem; /* Add padding to the top of the main content area */
   }
 }
 
@@ -98,6 +130,13 @@
 
   .navigation li:last-child {
     margin-right: 0; /* Ensure the last item doesn't have extra space */
+  }
+  .hamburger-menu {
+    display: none; /* Hide the hamburger menu icon on larger screens */
+  }
+
+  .header-right {
+    display: block; /* Show the header-right section on larger screens */
   }
 }
 
@@ -122,11 +161,19 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60vh; /* Adjust the height as necessary */
+  /* Remove the fixed height to allow the content to define the height */
+  padding-top: var(--header-height); /* This variable should equal the height of your header */
+  margin-top: var(--header-height); /* This provides space below the header */
   background: url("/assets/main1.png") no-repeat center center;
   background-size: cover;
   text-align: center;
   position: relative;
+  z-index: 1; /* Ensure the hero content is above the header in the stacking context */
+}
+
+/* You might need to define --header-height in :root or the :host in your CSS */
+:root {
+  --header-height: 100px; /* Adjust this based on the actual height of your header */
 }
 
 /* Overlay for better readability */
@@ -186,6 +233,7 @@ main {
   color: #333; /* Darker font color for contrast */
   padding: 4rem 0; /* More vertical padding */
   text-align: center; /* Center align the text */
+  margin-bottom: 1rem;
 }
 
 .introduction h2 {
@@ -207,6 +255,7 @@ main {
   text-align: center; /* Center the text */
   padding: 2rem 0; /* Add padding above and below the text */
   border-top: 1px solid #e1e1e1; /* Light grey border on top */
+  margin-top: auto; /* Push the footer to the bottom */
 }
 
 /* Style for the footer credits specifically */

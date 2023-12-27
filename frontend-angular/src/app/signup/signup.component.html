@@ -1,15 +1,20 @@
+<!--frontend-angular/src/app/signup/signup.component.html -->
+
 <div class="signup-container">
   <h1>Sign up</h1>
-  <form (ngSubmit)="onLogin()">
+  <form (ngSubmit)="onSignup()">
     <div class="form-group">
-      <label for="username">User Email :</label>
-      <input type="text" id="username" class="form-control" [(ngModel)]="loginData.username" name="username" required>
+      <label for="email">User Email :</label>
+      <input type="email" id="email" name="email" class="form-control" [(ngModel)]="signupData.email" required autocomplete="email">
+
     </div>
     <div class="form-group">
       <label for="password">Password :</label>
-      <input type="password" id="password" class="form-control" [(ngModel)]="loginData.password" name="password" required>
+      <input type="password" id="password" name="password" class="form-control" [(ngModel)]="signupData.password" required autocomplete="new-password">
+
     </div>
     <button type="submit" class="btn-signup">Sign up</button>
   </form>
 </div>
+
 

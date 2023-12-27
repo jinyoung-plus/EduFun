@@ -1,36 +1,33 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { AboutUsComponent } from './about-us/about-us.component';
-import { OurVenuesComponent } from './our-venues/our-venues.component';
-import { EventsComponent } from './events/events.component';
-import { ContactComponent } from './contact/contact.component';
-import { MakeReservationComponent } from './make-reservation/make-reservation.component';
-import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { DeckComponent } from './deck/deck.component';
-import { AddComponent } from './add/add.component';
+import { DeckListComponent } from './deck-list/deck-list.component';
+import { DeckCreateComponent } from './deck-create/deck-create.component';
+import { StudyComponent } from './study/study.component';
+import { FlashcardCreateComponent } from './flashcard-create/flashcard-create.component';
+import { FlashcardListComponent  } from './flashcard-list/flashcard-list.component';
+import { FlashcardManagementComponent } from './flashcard-management/flashcard-management.component';
 import { SearchComponent } from './search/search.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { SynchronizationComponent } from './synchronization/synchronization.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent }, // 기본 경로 설정
+  { path: '', component: HomeComponent }, // Default route
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'about-us', component: AboutUsComponent },
-  { path: 'our-venues', component: OurVenuesComponent },
-  { path: 'events', component: EventsComponent },
-  { path: 'contact', component: ContactComponent },
-  { path: 'make-reservation', component: MakeReservationComponent },
-  { path: 'deck', component: DeckComponent },
-  { path: 'add', component: AddComponent },
+  { path: 'deck-list', component: DeckListComponent },
+  { path: 'create-deck', component: DeckCreateComponent },
+  { path: 'study', component: StudyComponent },
+  { path: 'flashcard-create', component: FlashcardCreateComponent },
+  { path: 'flashcard-list', component: FlashcardListComponent },
+  { path: 'add-flashcards', component: FlashcardManagementComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'contact', component: ContactComponent },
   { path: 'statistics', component: StatisticsComponent },
   { path: 'synchronization', component: SynchronizationComponent },
+  // Add any new route configurations above this line
+  // Wildcard route for a 404 page or redirect can be placed here
 ];
 
 @NgModule({
@@ -38,3 +35,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
