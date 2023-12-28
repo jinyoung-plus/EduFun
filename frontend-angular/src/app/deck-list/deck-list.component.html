@@ -11,7 +11,8 @@
             <thead class="bg-light">
             <tr>
               <th scope="col">Deck Name</th>
-              <th scope="col" class="text-right">Actions</th>
+              <th scope="col" class="text-right actions-header">Actions</th>
+              <!--<th scope="col">Number of Cards</th>-->
             </tr>
             </thead>
             <tbody>
@@ -20,10 +21,10 @@
                 <td>{{ deck.name }}</td>
                 <td class="text-right">
                   <button class="btn btn-outline-primary btn-sm" (click)="enableEditing(deck)">
-                    <i class="fas fa-edit"></i> Edit
+                    <span class="fas fa-edit"></span> <span>Edit</span>
                   </button>
                   <button class="btn btn-outline-danger btn-sm" (click)="deleteDeck(deck.id)">
-                    <i class="fas fa-trash-alt"></i> Delete
+                    <span class="fas fa-trash-alt"></span> <span>Delete</span>
                   </button>
                 </td>
               </ng-container>
@@ -38,6 +39,7 @@
                   </button>
                 </td>
               </ng-template>
+              <!--<td class="text-right">{{ deck.cardcount }}</td>-->
             </tr>
             </tbody>
           </table>

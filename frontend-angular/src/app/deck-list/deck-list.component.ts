@@ -16,18 +16,18 @@ export class DeckListComponent implements OnInit {
     this.loadDecks();
   }
 
-  loadDecks(): void {
-    this.apiService.getDecks().subscribe(
-      (data: any[]) => {
-        this.decks = data;
-      },
-      error => {
-        console.error('Error fetching decks', error);
-      }
-    );
-  }
+    loadDecks(): void {
+        this.apiService.getDecks().subscribe(
+            (decksData: any[]) => {
+                this.decks = decksData.sort((a, b) => a.name.localeCompare(b.name));
+            },
+            error => {
+                console.error('Error fetching decks', error);
+            }
+        );
+    }
 
-  enableEditing(deck: any): void {
+    enableEditing(deck: any): void {
     deck.editing = true;
   }
 
@@ -36,8 +36,6 @@ export class DeckListComponent implements OnInit {
     // Optionally refresh the deck list if you need to discard unsaved changes
     this.loadDecks();
   }
-
-
 
   saveChanges(deck: any): void {
     const updatedName = deck.name; // 수정된 덱 이름을 임시 변수에 저장합니다.

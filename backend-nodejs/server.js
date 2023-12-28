@@ -46,10 +46,12 @@ app.use('/api', srsRoutes);
 // 회원가입 및 로그인 라우트
 app.post('/signup', AuthController.signup);
 app.post('/login', AuthController.login);
+app.post('/reset-password', AuthController.resetPassword);
 
 // 데크 관련 라우트
 app.post('/decks', jwtMiddleware, deckController.createDeck);
 app.get('/decks', jwtMiddleware, deckController.getDecks);
+app.get('/decks/:id', jwtMiddleware, deckController.getDecks);
 app.put('/decks/:deckId', jwtMiddleware, deckController.updateDeck);
 app.delete('/decks/:deckId', jwtMiddleware, deckController.deleteDeck);
 

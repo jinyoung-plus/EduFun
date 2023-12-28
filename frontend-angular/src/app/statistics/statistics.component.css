@@ -1,0 +1,6 @@
+.highcharts-container {
+    /*margin: 0 auto;  This will center the chart */
+    margin-top: 3%;
+    margin-left: 5%;
+    margin-right: 5%;
+}

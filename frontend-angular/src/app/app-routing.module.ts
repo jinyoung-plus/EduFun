@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DeckListComponent } from './deck-list/deck-list.component';
 import { DeckCreateComponent } from './deck-create/deck-create.component';
 import { StudyComponent } from './study/study.component';
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent }, // Default route
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'deck-list', component: DeckListComponent },
   { path: 'create-deck', component: DeckCreateComponent },
   { path: 'study', component: StudyComponent },

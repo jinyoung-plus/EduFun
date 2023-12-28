@@ -56,6 +56,11 @@ const Deck = sequelize.define('decks', {
     type: DataTypes.TEXT,
     allowNull: true // Description is optional
   },
+  cardcount: {
+    type: DataTypes.INTEGER, // cardCount 열 추가
+    allowNull: false,
+    defaultValue: 0
+  },
   created_at: {
     type: DataTypes.DATE,
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

@@ -1,10 +1,47 @@
 /* study.component.css */
 
+.study-wrapper {
+  position: relative;
+}
+
+.study-container {
+  position: relative;
+  z-index: 2; /* Higher than the buttons to ensure it overlaps */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 60px; /* Space for the previous button */
+  padding-right: 60px;
+}
+
+.deck-selection {
+  margin-bottom: 20px; /* Adjust as needed */
+  width: 100%
+}
+
+.card-review-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 150px; /* Adjust as needed */
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Adjust as needed */
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.end-session-btn {
+  margin-top: 30px; /* Adjust as needed */
+}
+
 .container {
-  max-width: 800px;
+  max-width: 60%;
   margin: 0 auto;
   padding: 0px;
-  margin-top: 3rem;
+  margin-top: 2rem;
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -14,57 +51,105 @@
 .header_ss {
   background: #4cae4c;
   color: darkorange;
-  padding: 15px;
   text-align: center;
-  font-size: 2.5rem; /* Adjust the size as necessary */
+  font-size: 2.0rem; /* Adjust the size as necessary */
   border-top-left-radius: 8px; /* Match this with your container border radius */
   border-top-right-radius: 8px;
 }
 
+
+.card-review-container {
+  width: 100%;
+  margin-bottom: 10px; /* Adjust as needed */
+}
+
+.navigation-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px; /* Adjust as needed */
+}
+
+.end-session-btn {
+  margin-top: 20px; /* Adjust as needed */
+}
+
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-select {
+  width: 100%; /* Adjust width as needed */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn-action {
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .study-session {
+  width: 90%;
   margin-top: 20px;
 }
 
-.deck-selection, .deck-title {
-  text-align: center;
+.deck-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
   font-size: 1.6rem;
 }
 
 .card-container {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px; /* Spacing between card and buttons */
 }
 
 .card {
+  width: 100%;
+  height: 100%;
   background: #FFFFF0;
+  text-align: center;
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 10px;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .placeholder {
   visibility: hidden; /* Hide the placeholder initially */
 }
 
-.end-btn {
-  flex-basis: 50%; /* Adjust width as necessary */
-  order: 1; /* This will place the end session button between the previous and next buttons */
-}
-
 .start-btn, .answer-btn, .btn {
   padding: 10px;
-  margin: 10px auto;
+  margin: 30px auto;
   display: block;
-  width: 30%;
+  width: 20%;
   border: none;
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+}
+
+.spacer {
+  width: 30px; /* 원하는 간격 크기 설정 */
 }
 
 .start-btn {
+  margin-left: 50px;
   background-color: #198754;
 }
 
@@ -77,7 +162,7 @@ button {
   width: 70%; /* Reduce width */
   height: 50px; /* Increase height */
   border-radius: 25px; /* Make corners rounded */
-  font-size: 1rem; /* Adjust font size as needed */
+  font-size: 1.2rem; /* Adjust font size as needed */
   margin: 10px auto; /* Center button horizontally and add some vertical space */
   display: block; /* Make sure it's a block element to respect width/height */
   background-color: #198754;/*#5cb85c; /* Example green color */
@@ -91,20 +176,57 @@ button:hover {
   background-color: #4cae4c; /* Darker green on hover for visual feedback */
 }
 
-.prev-btn, .next-btn {
-  flex-basis: 25%; /* Adjust width as necessary */
+.review-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Spacing between buttons and the 'End Session' button */
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1; /* Lower than the study container to allow overlap */
+}
+
+.prev-btn {
+  left: 10%;
+  text-align: left;
+  font-weight: bold;
+  font-size: 1.2rem
+}
+
+.next-btn {
+  right: 10%;
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.2rem
+}
+
+.end-session-spacing {
+  display: none; /* Remove if not needed */
+}
+
+.end-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: darkslategrey;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .navigation-buttons {
   display: flex;
-  justify-content: space-between; /* This will spread the buttons apart */
-  margin-bottom: 10px; /* Adjust as needed for spacing */
+  justify-content: space-between;
+  margin-top: 10px; /* Adjust as needed */
 }
 
-.end-btn {
-  display: block; /* Makes the button a block-level element */
-  width: 70%; /* Adjust width as needed */
-  margin-top: 30px; /* Adjust as needed for spacing */
+.end-session-container {
+  width: 30%;
+  margin-top: 20px; /* Adjust as needed */
+  text-align: center;
 }
 
 .button-container {
@@ -124,15 +246,27 @@ button:hover {
   background-color: #d9534f;
 }
 
-.review-buttons {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px; /* Add some space between navigation and review buttons */
+.btn.grey-out {
+  background-color: #ccc; /* Or any grey color you prefer */
+}
+
+.grey {
+  background-color: #ccc; /* Or any grey color you prefer */
+  color: #333; /* Optional: change the text color if needed */
+  border: 1px solid #bbb; /* Optional: if you want a border */
 }
 
 @media (max-width: 768px) {
-  .container {
-    width: 95%;
+  .prev-btn, .next-btn {
+    position: static; /* Stack the buttons on smaller screens */
+    transform: none;
+    top: auto;
+    margin: 10px 0; /* Add some space around buttons */
+  }
+
+  .study-container {
+    padding-left: 15px; /* Adjust padding for smaller screens */
+    padding-right: 15px; /* Adjust padding for smaller screens */
   }
 }
 

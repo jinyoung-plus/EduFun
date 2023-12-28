@@ -1,7 +1,7 @@
 // study.component.ts
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
-import { Card, ReviewCard } from '../card.model';
+import { Deck, Card, ReviewCard } from '../card.model';
 
 @Component({
   selector: 'app-study',
@@ -11,13 +11,15 @@ import { Card, ReviewCard } from '../card.model';
 export class StudyComponent implements OnInit {
   decks: any[] = [];
   selectedDeckId: number | null = null;
-  selectedDeck: any; // Declare the selectedDeck property
+  selectedDeck?: Deck; // Declare the selectedDeck property
   currentDeck: any;
-  currentCard: ReviewCard | null = null; // To hold the current card
+  currentCard?: Card | null = null; //ReviewCard | null = null; // To hold the current card
   currentCardIndex: number = 0; // To keep track of the current card's index
   reviewSession: ReviewCard[] = [];
   showAnswerFlag: boolean = false; // To determine whether to show the answer
-
+  reviewMade = false;
+  buttonsDisabled = false;
+  public userMessage: string = ''; // 사용자 메시지를 위한 속성 추가
 
   constructor(
       private apiService: ApiService,
@@ -35,13 +37,19 @@ export class StudyComponent implements OnInit {
 
   getDecks(): void {
     this.apiService.getDecks().subscribe(
-      decks => this.decks = decks,
-      error => console.error('Error fetching decks', error)
+        (decks) => {
+          this.decks = decks.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+        },
+      error => {
+        console.error('Error fetching decks', error);
+      }
     );
   }
-
   startStudy(): void {
-    // selectedDeckId가 문자열로 오고 있다면, 숫자로 변환합니다.
+    if (!this.selectedDeckId) {
+      alert('Please select a deck to start studying.');
+      return;
+    }
     const deckId = Number(this.selectedDeckId);
     this.selectedDeck = this.decks.find(deck => deck.id === this.selectedDeckId);
 
@@ -51,19 +59,18 @@ export class StudyComponent implements OnInit {
       if (token) {
         this.apiService.getFlashcardsForDeck(token, deckId).subscribe(
             (cards: Card[]) => {
-              // 선택된 덱 ID와 일치하는 덱 객체를 찾습니다.
-              this.currentDeck = this.decks.find(deck => deck.id === deckId);
-
-              if (this.currentDeck) {
-                this.reviewSession = cards.map(card => ({
-                  ...card,
-                  review: false,
-                  currentInterval: 0, // 간격 초기화
-                  easinessFactor: 2.5, // 용이성 계수 초기화
-
-                }));
-              } else {
-                console.error('Selected deck not found in the decks array');
+              this.reviewSession = cards.map(card => ({
+                ...card,
+                review: false,
+                currentInterval: 0,
+                easinessFactor: 2.5,
+              }));
+              // Ensure we have cards before setting the current card
+              if (this.reviewSession.length > 0) {
+                this.currentCardIndex = 0;
+                this.currentCard = this.reviewSession[this.currentCardIndex];
+                this.showAnswerFlag = false;
+                this.changeDetector.detectChanges(); // Trigger change detection to update the view
               }
             },
             error => console.error('Error fetching flashcards', error)
@@ -74,12 +81,9 @@ export class StudyComponent implements OnInit {
     } else {
       console.error('No deck selected');
     }
-    if (this.reviewSession.length > 0) {
-      this.currentCardIndex = 0;
-      this.currentCard = this.reviewSession[this.currentCardIndex];
-      this.showAnswerFlag = false;
-    }
   }
+
+
   showAnswer(): void {
     // Toggle the flag to show the answer
     if (this.currentCard) {
@@ -91,7 +95,13 @@ export class StudyComponent implements OnInit {
     if (this.currentCardIndex > 0) {
       this.currentCardIndex--;
       this.currentCard = this.reviewSession[this.currentCardIndex];
-      this.showAnswerFlag = false; // Reset the answer flag
+      this.showAnswerFlag = false;
+      this.reviewMade = false;
+      this.buttonsDisabled = false;
+      this.userMessage = ''; // 메시지 초기화
+    } else {
+      // Display message when the user is at the first card
+      alert('There is no more card.');
     }
   }
 
@@ -99,7 +109,13 @@ export class StudyComponent implements OnInit {
     if (this.currentCardIndex < this.reviewSession.length - 1) {
       this.currentCardIndex++;
       this.currentCard = this.reviewSession[this.currentCardIndex];
-      this.showAnswerFlag = false; // Reset the answer flag
+      this.showAnswerFlag = false;
+      this.reviewMade = false;
+      this.buttonsDisabled = false;
+      this.userMessage = ''; // 메시지 초기화
+    } else {
+      // Display message when the user is at the last card
+      alert('There is no more card.');
     }
   }
 
@@ -144,15 +160,35 @@ export class StudyComponent implements OnInit {
         },
         srsError => console.error('Error calculating SRS', srsError)
     );
+    this.reviewMade = true;
+    this.buttonsDisabled = true;
   }
 
   endSession(): void {
-    // 세션 종료 로직을 추가합니다.
-    // 예를 들어, 리뷰가 완료된 카드 정보를 서버에 저장하거나 사용자에게 피드백을 제공할 수 있습니다.
-    alert('Study session ended');
-    // 세션 종료 후에는 현재 덱과 리뷰 세션을 초기화합니다.
+    if (this.currentDeck && this.reviewSession.length) {
+      const token = localStorage.getItem('authToken') || '';
+      const reviewedCards = this.reviewSession.filter(card => card.review);
+
+      if (token && reviewedCards.length) {
+        this.apiService.saveSession(token, reviewedCards).subscribe(
+            (response: any) => { // Ideally, replace 'any' with a more specific type
+              // Handle the response here
+              alert('Study session saved.');
+            },
+            (error: any) => { // Ideally, replace 'any' with a more specific type
+              console.error('Failed to save session', error);
+            }
+        );
+      }
+    }
+
+    alert('Study session ended.');
+    // Reset session state
     this.currentDeck = null;
+    this.currentCard = null;
+    this.currentCardIndex = 0;
     this.reviewSession = [];
+    this.selectedDeckId = null;
   }
 }
 

@@ -10,13 +10,25 @@
 }
 
 .card-header {
-    background-color: #198754;
-    color: white;
-    padding: 10px 0;
+    background-color: #4cae4c; /* Your desired header background color */
+    color: white; /* Your desired header font color */
+    padding: 10px; /* Adjust padding as necessary */
+    text-align: center;
+    /* Add other styles as needed */
 }
 
 .card-body {
-    padding: 20px;
+    background-color: white; /* Background color for the body */
+    padding: 20px; /* Adjust padding as necessary */
+    /* Add other styles as needed */
+}
+
+/* Style for the list group */
+.list-group-item {
+    border: 1px solid #ddd; /* Light grey border for each item */
+    margin-bottom: 5px; /* Space between items */
+    padding: 10px; /* Padding inside each item */
+    /* Add other styles as needed */
 }
 
 .form-select, .form-control {

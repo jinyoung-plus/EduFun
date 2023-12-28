@@ -22,7 +22,7 @@ export class FlashcardCreateComponent implements OnInit {
     loadDecks(): void {
         this.apiService.getDecks().subscribe(
             (data: any[]) => {
-                this.decks = data;
+                this.decks = data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
             },
             error => {
                 console.error('Error fetching decks', error);

@@ -42,6 +42,18 @@
     border-color: #dee2e6;
 }
 
+th.text-right {
+    padding-right: 30px; /* Reduce the right padding to move text to the left */
+}
+
+.actions-header {
+    padding-right: 30px; /* Adjust the right padding as needed */
+}
+
+tbody td:first-child {
+    font-size: 1.25rem; /* Adjust the size as needed */
+}
+
 .btn {
     font-weight: 400;
     text-align: center;
@@ -58,16 +70,20 @@
 
 .btn-outline-primary {
     color: #007bff;
-    border-color: #007bff;
+    border: 1px solid #007bff; /* Ensure this line is here */
+    font-weight: bold; /* Make button text bold */
+    margin-right: 8px;
 }
 
 .btn-outline-primary:hover {
+    margin-left: 8px;
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
 }
 
 .btn-outline-danger {
+    font-weight: bold; /* Make button text bold */
     color: #dc3545;
     border-color: #dc3545;
 }

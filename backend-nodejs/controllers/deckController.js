@@ -1,6 +1,6 @@
 // EduFun/backend-nodejs/controllers/deckController.js
-
 const { Deck } = require('../models/models');
+const { sequelize } = require('../models/models');
 // 덱 생성
 const createDeck = async (req, res) => {
     try {
@@ -8,7 +8,8 @@ const createDeck = async (req, res) => {
         const newDeck = await Deck.create({
             user_id: req.user.id,
             name,
-            description
+            description,
+            cardcount,
         });
         res.status(201).json(newDeck);
     } catch (error) {
@@ -21,7 +22,9 @@ const createDeck = async (req, res) => {
 const getDecks = async (req, res) => {
     try {
         const userDecks = await Deck.findAll({
-            where: { user_id: req.user.id }
+            where: { user_id: req.user.id },
+            attributes: ['id', 'name', 'description', 'cardcount'], // 'cardCount' 열 추가
+            raw: true
         });
         res.status(200).json(userDecks);
     } catch (error) {

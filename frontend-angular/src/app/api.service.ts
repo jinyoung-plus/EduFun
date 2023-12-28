@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Card } from './card.model'; // 'Card' 인터페이스 임포트
+import { Card, ReviewCard } from './card.model'; // 'Card' 인터페이스 임포트
 
 
 @Injectable({
@@ -31,6 +31,10 @@ export class ApiService {
     return this.http.post(`${this.BASE_URL}/login`, { email, password });
   }
 
+  resetUserPassword(email: string, newPassword: string) {
+    return this.http.post(`${this.BASE_URL}/reset-password`, { email, newPassword });
+  }
+
  //덱생성 메소드 추가
   createDeck(deckName: string) {
     const token = localStorage.getItem('authToken'); // 로컬 스토리지에서 토큰 가져오기
@@ -46,7 +50,6 @@ export class ApiService {
       })
     });
   }
-
   // Method to delete a deck
   deleteDeck(deckId: number): Observable<any> {
     const token = this.getToken();
@@ -119,6 +122,12 @@ export class ApiService {
   deleteFlashcard(token: string, flashcardId: number) {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.delete(`${this.BASE_URL}/flashcards/${flashcardId}`, { headers });
+  }
+
+  saveSession(token: string, reviewedCards: ReviewCard[]) {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // Adjust the URL and body according to your backend's requirements
+    return this.http.post(`${this.BASE_URL}/save-session`, { reviewedCards }, { headers });
   }
 
   // Study Sessions

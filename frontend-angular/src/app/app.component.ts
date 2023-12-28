@@ -1,7 +1,11 @@
 // EduFun/frontend-angular/src/app/app.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import * as Highcharts from 'highcharts';
+import HC_exporting from 'highcharts/modules/exporting';
+
+HC_exporting(Highcharts);
 
 @Component({
     selector: 'app-root',
@@ -9,29 +13,33 @@ import { BehaviorSubject, Observable } from 'rxjs';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    isLoggedIn$: BehaviorSubject<boolean>; // Change to BehaviorSubject
-    userEmail$: BehaviorSubject<string | null>; // Change to BehaviorSubject
+
+    isLoggedIn$: Observable<boolean>;
+    userEmail$: Observable<string | null>;
 
     constructor(private authService: AuthService) {
-        this.isLoggedIn$ = new BehaviorSubject<boolean>(false); // Initialize with a default value
-        this.userEmail$ = new BehaviorSubject<string | null>(null); // Initialize with a default value
+        // Initialize the Observables in the constructor
+        this.isLoggedIn$ = this.authService.isLoggedIn;
+        this.userEmail$ = this.authService.currentUserEmail;
     }
 
     ngOnInit(): void {
-        this.checkLoginStatus();
+       // this.checkLoginStatus();
+        this.isLoggedIn$ = this.authService.isLoggedIn;
+        this.userEmail$ = this.authService.currentUserEmail;
     }
 
     checkLoginStatus(): void {
         const token = localStorage.getItem('authToken');
         const userEmail = localStorage.getItem('userEmail');
-        this.isLoggedIn$.next(!!token);
-        this.userEmail$.next(userEmail);
+        //this.isLoggedIn$.next(!!token);
+        //this.userEmail$.next(userEmail);
     }
 
     logout(): void {
         this.authService.logout();
-        this.isLoggedIn$.next(false);
-        this.userEmail$.next(null);
+       // this.isLoggedIn$.next(false);
+       // this.userEmail$.next(null);
         // Handle redirection and page refresh if necessary
     }
 }

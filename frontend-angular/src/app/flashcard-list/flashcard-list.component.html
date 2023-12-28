@@ -15,17 +15,43 @@
             <div *ngIf="flashcards && flashcards.length > 0">
                 <h3 class="mb-3">Flashcards in Selected Deck:</h3>
                 <ul class="list-group">
-                    <li class="list-group-item" *ngFor="let flashcard of flashcards">
-                        <strong>Front:</strong> {{ flashcard.front }} <br>
-                        <strong>Back:</strong> {{ flashcard.back }}
+                    <li class="list-group-item" *ngFor="let flashcard of flashcards; let i = index">
+                        <ng-container *ngIf="!flashcard.editing; else editFlashcard">
+                            <strong>Front:</strong> {{ flashcard.front }} <br>
+                            <strong>Back:</strong> {{ flashcard.back }}
+                            <div class="text-right">
+                                <button class="btn btn-outline-primary btn-sm" (click)="enableFlashcardEditing(flashcard)">
+                                    <span class="fas fa-edit"></span> <span>Edit</span>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" (click)="deleteFlashcard(flashcard.id)">
+                                    <span class="fas fa-trash-alt"></span> <span>Delete</span>
+                                </button>
+                            </div>
+                        </ng-container>
+                        <ng-template #editFlashcard>
+                            <div class="form-group">
+                                <label for="front{{i}}">Front:</label>
+                                <input id="front{{i}}" type="text" [(ngModel)]="flashcard.front" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="back{{i}}">Back:</label>
+                                <input id="back{{i}}" type="text" [(ngModel)]="flashcard.back" class="form-control" />
+                            </div>
+                            <div class="text-right">
+                                <button class="btn btn-success btn-sm" (click)="saveFlashcardChanges(flashcard)">
+                                    Save
+                                </button>
+                                <button class="btn btn-secondary btn-sm" (click)="cancelFlashcardEditing(flashcard)">
+                                    Cancel
+                                </button>
+                            </div>
+                        </ng-template>
                     </li>
                 </ul>
             </div>
             <div *ngIf="!flashcards || flashcards.length === 0" class="text-center">
                 <p>No flashcards available. Add some!</p>
-            </div>
         </div>
     </div>
 </div>
-
 

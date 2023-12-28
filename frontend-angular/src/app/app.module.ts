@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { HighchartsChartModule } from 'highcharts-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -21,6 +21,7 @@ import { FlashcardListComponent } from './flashcard-list/flashcard-list.componen
 import { FlashcardManagementComponent } from './flashcard-management/flashcard-management.component';
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { StudyComponent } from './study/study.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 @NgModule({
@@ -39,13 +40,15 @@ import { StudyComponent } from './study/study.component';
     FlashcardManagementComponent,
     DeckEditComponent,
     StudyComponent,
+    ResetPasswordComponent,
     // Add other components that are actually being used in your project
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HighchartsChartModule,
     // You can remove NgbModule if you're not using ng-bootstrap components
     // Remove RouterModule if you're not doing any manual routing configurations outside AppRoutingModule
   ],

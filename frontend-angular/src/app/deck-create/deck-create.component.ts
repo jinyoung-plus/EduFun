@@ -17,6 +17,14 @@ export class DeckCreateComponent {
     ) {}
 
     createDeck(): void {
+        const authToken = localStorage.getItem('authToken');
+        // If there's no token, alert the user and redirect to login
+        if (!authToken) {
+            alert('Please log in to create a new deck.');
+            this.router.navigate(['/login']); // Redirect to the login page
+            return; // Exit the function
+        }
+
         // Check if the deckName is not empty, null, or undefined.
         if (!this.deckName) {
             alert('Please enter a deck name.'); // Show an alert if deckName is falsy.
