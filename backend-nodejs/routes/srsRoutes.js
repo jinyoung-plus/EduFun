@@ -4,7 +4,10 @@ const express = require('express');
 const router = express.Router();
 const Deck = require('../models/models'); // Ensure you import Deck and Flashcard models
 const calculateSRS = require('../utils/srsAlgorithm');
+const flashcardController = require('../controllers/flashcardController');
 
+
+router.post('/flashcards/bulk', flashcardController.bulkCreate);
 router.post('/calculate', (req, res) => {
   const { performanceRating, currentInterval, easinessFactor } = req.body;
   try {

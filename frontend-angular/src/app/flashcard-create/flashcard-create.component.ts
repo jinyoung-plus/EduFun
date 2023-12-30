@@ -12,6 +12,7 @@ export class FlashcardCreateComponent implements OnInit {
     selectedDeckId: number | null = null;
     front = '';
     back = '';
+    selectedFile: File | null = null;
 
     constructor(private apiService: ApiService) {}
 
@@ -28,6 +29,81 @@ export class FlashcardCreateComponent implements OnInit {
                 console.error('Error fetching decks', error);
             }
         );
+    }
+
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.selectedFile = input.files[0];
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
+    uploadCsv(): void {
+        // selectedDeckId와 selectedFile이 유효한지 확인합니다.
+        if (!this.selectedDeckId) {
+            alert('Please select a deck before uploading.');
+            return;
+        }
+
+        if (!this.selectedFile) {
+            alert('Please select a CSV file to upload.');
+            return;
+        }
+
+        // 파일을 파싱하는 함수를 호출합니다.
+        this.parseCsvFile(this.selectedFile);
+    }
+
+  convertCsvToFlashcards(csvText: string): { front: string, back: string }[] {
+    const flashcards = [];
+    const lines = csvText.split('\n');
+
+    for (let line of lines) {
+      const [front, back] = line.split(',').map(s => s.trim());
+
+      // 간단한 유효성 검사: 빈 줄이나 누락된 데이터가 있는 줄은 건너뜁니다.
+      if (!front || !back) {
+        continue;
+      }
+
+      flashcards.push({ front, back });
+    }
+
+    return flashcards;
+  }
+
+  parseCsvFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result;
+      if (typeof text === 'string') {
+        const flashcards = this.convertCsvToFlashcards(text);
+
+        // deckId가 null이 아닌 경우에만 bulkAddFlashcards를 호출합니다.
+        if (this.selectedDeckId !== null) {
+          this.bulkAddFlashcards(this.selectedDeckId, flashcards);
+        }
+      }
+    };
+    reader.readAsText(file);
+  }
+
+    bulkAddFlashcards(deckId: number, flashcards: { front: string, back: string }[]): void {
+        // API 서비스를 사용하여 여러 플래시카드를 추가하는 로직 구현
+        // 예를 들어:
+        this.apiService.addFlashcardsBulk(deckId, flashcards).subscribe({
+            next: data => {
+                console.log('Flashcards added successfully', data);
+                alert('Flashcards added to deck.');
+                // 성공 후 필요한 추가 작업 수행
+            },
+            error: error => {
+                console.error('Error adding flashcards', error);
+                alert('Failed to add flashcards.');
+            }
+        });
     }
 
     onDeckSelectChange(deckId: string): void {

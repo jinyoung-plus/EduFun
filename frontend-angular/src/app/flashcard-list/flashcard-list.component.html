@@ -13,8 +13,11 @@
                 </select>
             </div>
             <div *ngIf="flashcards && flashcards.length > 0">
-                <h3 class="mb-3">Flashcards in Selected Deck:</h3>
-                <ul class="list-group">
+              <h3 class="mb-3">
+                Number of the flashcards in Selected Deck is <span *ngIf="flashcards">{{ flashcards.length }} .</span>
+              </h3>
+
+              <ul class="list-group">
                     <li class="list-group-item" *ngFor="let flashcard of flashcards; let i = index">
                         <ng-container *ngIf="!flashcard.editing; else editFlashcard">
                             <strong>Front:</strong> {{ flashcard.front }} <br>

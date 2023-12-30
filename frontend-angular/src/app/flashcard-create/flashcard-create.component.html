@@ -1,32 +1,59 @@
 <!-- flashcard-create.component.html -->
 <div class="container my-5">
-    <div class="card">
-        <div class="card-header text-white">
-            <h2 class="text-center">Add a Flashcard</h2>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header text-white" style="background-color: lightseagreen;">
+          <h3 class="text-center">Add a Single Flashcard</h3>
         </div>
         <div class="card-body">
-            <form (submit)="addFlashcard()">
-                <div class="form-group mb-3">
-                    <label for="deckSelect">Select Deck:</label>
-                    <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId" name="deckSelect" required>
-                        <option value=null disabled selected>Please select a deck.</option>
-                        <option *ngFor="let deck of decks" [ngValue]="deck.id">{{ deck.name }}</option>
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="front">Front:</label>
-                    <textarea id="front" class="form-control" placeholder="Please write the front of the card." [(ngModel)]="front" name="front" required></textarea>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="back">Back:</label>
-                    <textarea id="back" class="form-control" placeholder="Please write the back of the card." [(ngModel)]="back" name="back" required></textarea>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-            </form>
+          <form (submit)="addFlashcard()">
+            <div class="form-group mb-3">
+              <label for="deckSelectSingle">Select Deck:</label>
+              <select id="deckSelectSingle" class="form-select" [(ngModel)]="selectedDeckId" name="deckSelect" required>
+                <option value=null disabled selected>Please select a deck</option>
+                <option *ngFor="let deck of decks" [ngValue]="deck.id">{{ deck.name }}</option>
+              </select>
+            </div>
+            <div class="form-group mb-3">
+              <label for="front">Front:</label>
+              <textarea id="front" class="form-control" placeholder="Please write the front of the card" [(ngModel)]="front" name="front" required></textarea>
+            </div>
+            <div class="form-group mb-3">
+              <label for="back">Back:</label>
+              <textarea id="back" class="form-control" placeholder="Please write the back of the card" [(ngModel)]="back" name="back" required></textarea>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">Add Card</button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header text-white" style="background-color: mediumseagreen;">
+          <h3 class="text-center">Upload Multiple Flashcards</h3>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="deckSelectMultiple">Select Deck:</label>
+            <select id="deckSelectMultiple" class="form-select" [(ngModel)]="selectedDeckId" name="deckSelect" required>
+              <option value=null disabled selected>Please select a deck</option>
+              <option *ngFor="let deck of decks" [ngValue]="deck.id">{{ deck.name }}</option>
+            </select>
+          </div>
+          <p class="text-muted">
+            Make sure your CSV file has the front content in column A and the back content in column B.
+          </p>
+          <div class="text-center">
+            <input type="file" (change)="onFileSelect($event)" accept=".csv" class="form-control mb-2">
+            <button type="button" (click)="uploadCsv()" class="btn btn-info upload-btn">Upload File</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 

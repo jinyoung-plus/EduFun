@@ -59,6 +59,7 @@ app.delete('/decks/:deckId', jwtMiddleware, deckController.deleteDeck);
 app.get('/decks/:deckId/flashcards', jwtMiddleware, flashcardController.getForDeck);
 app.get('/flashcards', jwtMiddleware, flashcardController.getAll);
 app.post('/flashcards', jwtMiddleware, flashcardController.create);
+app.post('/flashcards/bulk', jwtMiddleware, flashcardController.bulkCreate); // Bulk create route
 app.put('/flashcards/:id', jwtMiddleware, flashcardController.update);
 app.delete('/flashcards/:id', jwtMiddleware, flashcardController.delete);
 

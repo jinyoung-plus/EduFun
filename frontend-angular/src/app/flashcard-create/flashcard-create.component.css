@@ -17,6 +17,12 @@
     padding: 10px 0;
 }
 
+.upload-btn {
+    background-color: #198754;
+    color: white;
+    margin-top: 4rem; /* Adjust the value as needed for your design */
+}
+
 .card-body {
     background-color: white;
     padding: 20px;

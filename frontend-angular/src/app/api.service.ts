@@ -124,6 +124,17 @@ export class ApiService {
     return this.http.delete(`${this.BASE_URL}/flashcards/${flashcardId}`, { headers });
   }
 
+
+  addFlashcardsBulk(deckId: number, flashcards: { front: string, back: string }[]): Observable<any> {
+    // 토큰을 가져옵니다. 인증이 필요하다면 이 부분을 사용합니다.
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // POST 요청을 서버에 보냅니다. 여기서는 '/flashcards/bulk' 엔드포인트를 사용했습니다.
+    // 실제 엔드포인트는 백엔드 구현에 따라 달라질 수 있습니다.
+    return this.http.post(`${this.BASE_URL}/flashcards/bulk`, { deckId, flashcards }, { headers });
+  }
+
   saveSession(token: string, reviewedCards: ReviewCard[]) {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     // Adjust the URL and body according to your backend's requirements
