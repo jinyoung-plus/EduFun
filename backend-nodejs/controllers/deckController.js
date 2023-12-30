@@ -9,7 +9,6 @@ const createDeck = async (req, res) => {
             user_id: req.user.id,
             name,
             description,
-            cardcount,
         });
         res.status(201).json(newDeck);
     } catch (error) {

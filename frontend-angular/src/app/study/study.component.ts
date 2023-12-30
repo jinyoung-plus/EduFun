@@ -20,6 +20,8 @@ export class StudyComponent implements OnInit {
   reviewMade = false;
   buttonsDisabled = false;
   public userMessage: string = ''; // 사용자 메시지를 위한 속성 추가
+  studyDirection: string = 'basic'; // New property for study direction
+  cardOrder: string = 'sequential'; // New property for card order
 
   constructor(
       private apiService: ApiService,
@@ -45,6 +47,7 @@ export class StudyComponent implements OnInit {
       }
     );
   }
+  // Updated startStudy method
   startStudy(): void {
     if (!this.selectedDeckId) {
       alert('Please select a deck to start studying.');
@@ -55,25 +58,32 @@ export class StudyComponent implements OnInit {
 
     if (deckId) {
       const token = localStorage.getItem('authToken') || '';
-
       if (token) {
         this.apiService.getFlashcardsForDeck(token, deckId).subscribe(
-            (cards: Card[]) => {
-              this.reviewSession = cards.map(card => ({
-                ...card,
-                review: false,
-                currentInterval: 0,
-                easinessFactor: 2.5,
-              }));
-              // Ensure we have cards before setting the current card
-              if (this.reviewSession.length > 0) {
-                this.currentCardIndex = 0;
-                this.currentCard = this.reviewSession[this.currentCardIndex];
-                this.showAnswerFlag = false;
-                this.changeDetector.detectChanges(); // Trigger change detection to update the view
-              }
-            },
-            error => console.error('Error fetching flashcards', error)
+          (cards: Card[]) => {
+            this.reviewSession = cards.map(card => ({
+              ...card,
+              review: false,
+              currentInterval: 0,
+              easinessFactor: 2.5,
+            }));
+
+            // Randomize the cards if 'random' is selected
+            if (this.cardOrder === 'random') {
+              this.shuffleArray(this.reviewSession);
+            }
+
+            // Reverse the cards if 'reverse' is selected
+            if (this.studyDirection === 'reverse') {
+              this.reviewSession.forEach(card => {
+                [card.front, card.back] = [card.back, card.front];
+              });
+            }
+
+            // Set the first card
+            this.setFirstCard();
+          },
+          error => console.error('Error fetching flashcards', error)
         );
       } else {
         console.error('No auth token found');
@@ -83,6 +93,23 @@ export class StudyComponent implements OnInit {
     }
   }
 
+// Utility method to shuffle an array
+  shuffleArray(array: any[]): void {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  // Method to set the first card of the session
+  setFirstCard(): void {
+    if (this.reviewSession.length > 0) {
+      this.currentCardIndex = 0;
+      this.currentCard = this.reviewSession[this.currentCardIndex];
+      this.showAnswerFlag = false;
+      this.changeDetector.detectChanges(); // Update the view
+    }
+  }
 
   showAnswer(): void {
     // Toggle the flag to show the answer
@@ -181,6 +208,8 @@ export class StudyComponent implements OnInit {
         );
       }
     }
+
+
 
     alert('Study session ended.');
     // Reset session state

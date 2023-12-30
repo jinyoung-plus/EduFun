@@ -1,4 +1,53 @@
 /* study.component.css */
+.selection-group {
+  margin-right: 20px; /* Adds space between dropdowns */
+  width: auto; /* Adjusts width to content or use a specific value like 200px */
+  display: inline-block; /* Aligns dropdowns horizontally */
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333; /* Adjust color to fit your theme */
+}
+
+.form-select {
+  min-width: 200px; /* Ensures dropdowns are not too narrow */
+  width: auto; /* Adjusts width to content */
+  padding: 20px;
+  border-radius: 5px;
+  border: 4px solid #ccc; /* Adjust border color to fit your theme */
+}
+
+.start-btn {
+  margin-top: 20px; /* This ensures there is some space above the start button */
+}
+
+.selection-group:last-child {
+  margin-right: 0;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .selection-group {
+    margin-bottom: 15px;
+  }
+
+  .form-label {
+    margin-right: 10px; /* Less space between dropdowns on smaller screens */
+    margin-bottom: 10px; /* Adds space below dropdowns for stacking */
+    display: block; /* Stacks dropdowns vertically */
+  }
+
+  .form-select {
+    width: 100%; /* Full width dropdowns on smaller screens */
+  }
+
+  .start-btn {
+    width: 100%; /* Full width button on smaller screens */
+  }
+}
 
 .study-wrapper {
   position: relative;
@@ -119,13 +168,16 @@
 
 .card {
   width: 100%;
-  height: 100%;
+  height: 200px;
   background: #FFFFF0;
   text-align: center;
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 10px;
-  font-size: 1.4rem;
+  font-size: 2rem;
+  font-weight: bold; /* Makes text bolder */
 }
 
 .placeholder {

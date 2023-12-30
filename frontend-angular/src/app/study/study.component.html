@@ -1,17 +1,38 @@
 <!-- study.component.html -->
 <div class="study-wrapper">
-    <div class="container study-container">
-        <header class="header_ss">
-            <h1>Let's Study</h1>
-        </header>
+  <div class="container study-container">
+    <header class="header_ss">
+      <h1>Let's Study</h1>
+    </header>
     <section class="study-session">
-        <div class="deck-selection">
-            <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId">
-                <option value=null disabled selected>Choose a deck to study...</option>
-                <option *ngFor="let deck of decks" [value]="deck.id">{{ deck.name }}</option>
-            </select>
-            <button class="start-btn" (click)="startStudy()">Start</button>
+      <div class="deck-selection">
+        <div class="selection-group">
+          <label for="deckSelect" class="form-label">Select Deck</label>
+          <select id="deckSelect" class="form-select" [(ngModel)]="selectedDeckId">
+            <option value=null disabled selected>Choose a deck to study...</option>
+            <option *ngFor="let deck of decks" [value]="deck.id">{{ deck.name }}</option>
+          </select>
         </div>
+
+        <div class="selection-group">
+          <label for="studyDirectionSelect" class="form-label">Card Direction</label>
+          <select id="studyDirectionSelect" class="form-select" [(ngModel)]="studyDirection">
+            <option value="basic" selected>Basic (front-to-back)</option>
+            <option value="reverse">Reverse (back-to-front)</option>
+          </select>
+        </div>
+
+        <div class="selection-group">
+          <label for="cardOrderSelect" class="form-label">Study Order</label>
+          <select id="cardOrderSelect" class="form-select" [(ngModel)]="cardOrder">
+            <option value="sequential" selected>Sequential</option>
+            <option value="random">Random</option>
+            <option value="reverse">Reverse</option>
+          </select>
+        </div>
+
+        <button class="start-btn" (click)="startStudy()">Start!</button>
+      </div>
 
         <h2 class="deck-title" *ngIf="selectedDeck">{{ selectedDeck.name }}</h2>
 
@@ -32,10 +53,10 @@
         </div>
 
         <div class="navigation-buttons">
-            <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Answer</button>
+            <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Show Answer</button>
         </div>
 
-        <button class="end-btn" (click)="endSession()">End Session</button>
+        <button class="end-btn" (click)="endSession()">Reset Session</button>
     </section>
     </div>
 
