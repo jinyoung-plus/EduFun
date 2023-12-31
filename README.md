@@ -8,6 +8,16 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+## Screenshots
+
+![Screenshot 1](/screenshots/screenshot1.png)
+
+This page features a screenshot of the main page, allowing users to log in, sign up, or engage in studying. The main page provides access to four categories: study, deck, card, and statistics.
+
+![Screenshot 2](/screenshots/screenshot2.png)
+
+This page serves as the registration window. Upon successful completion of the user's registration, a notification will appear indicating that the registration is complete. Additionally, a popup message will prompt the user to move to the login page.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
