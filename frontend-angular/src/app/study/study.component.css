@@ -198,16 +198,16 @@
 
 .start-btn {
   margin-left: 20px;
-  background-color: #198754;
+  background-color: seagreen;
 }
 
 .end-btn {
   margin-left: 15px;
-  background-color: darkslategrey;
+  background-color: darkolivegreen;
 }
 
 .answer-btn {
-  background-color: #f0ad4e;
+  background-color: chocolate;
 }
 
 
@@ -237,7 +237,9 @@ button:hover {
 
 .nav-btn {
   position: absolute;
+  height: 70px;
   top: 50%;
+  background-color: darkslategray;
   transform: translateY(-50%);
   z-index: 1; /* Lower than the study container to allow overlap */
 }
@@ -246,21 +248,19 @@ button:hover {
   left: 10%;
   text-align: left;
   font-weight: bold;
-  font-size: 1.2rem
+  font-size: 1.5rem
 }
 
 .next-btn {
   right: 10%;
   text-align: right;
   font-weight: bold;
-  font-size: 1.2rem
+  font-size: 1.5rem
 }
 
 .end-session-spacing {
   display: none; /* Remove if not needed */
 }
-
-
 
 .navigation-buttons {
   display: flex;
@@ -284,11 +284,11 @@ button:hover {
 }
 
 .btn.success {
-  background-color: #4cae4c;
+  background-color: darkorange;
 }
 
 .btn.danger {
-  background-color: #d9534f;
+  background-color: darkgoldenrod;
 }
 
 .btn.grey-out {

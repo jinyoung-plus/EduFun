@@ -32,7 +32,7 @@
         </div>
 
         <button class="start-btn" (click)="startStudy()">Start!</button>
-        <button class="end-btn" (click)="endSession()">Reset Session</button>
+        <button class="end-btn" (click)="endSession()">Reset</button>
       </div>
 
         <h2 class="deck-title" *ngIf="selectedDeck">{{ selectedDeck.name }}</h2>
@@ -60,8 +60,8 @@
     </section>
     </div>
 
-    <button class="nav-btn prev-btn" (click)="previousCard()"><<< Previous</button>
-    <button class="nav-btn next-btn" (click)="nextCard()">Next >>></button>
+    <button class="nav-btn prev-btn" (click)="previousCard()"><< Previous</button>
+    <button class="nav-btn next-btn" (click)="nextCard()">Next >></button>
     <!-- 사용자 메시지 표시 부분 -->
     <div *ngIf="userMessage" class="user-message">
         {{ userMessage }}

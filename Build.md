@@ -191,6 +191,4 @@ commit;
 
 ## 6. Additional Resources
     If you have any inquiries or questions while running the EduFun project, please don't hesitate to reach out to me at jinyoung.ko@edu.devinci.fr. I will respond promptly to assist you.
-
-
 $$
