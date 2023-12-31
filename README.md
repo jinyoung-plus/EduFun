@@ -135,11 +135,9 @@ The learner is in a situation where they are about to press the "Reset Session" 
 ![Screenshot 45](/screenshots/screenshot45.png)
 Upon completing the study session, a popup confirms that the learning session has concluded.
 
-![Screenshot 46](/screenshots/screenshot46.jpg)
 ![Screenshot 47](/screenshots/screenshot47.jpg)
 ![Screenshot 48](/screenshots/screenshot48.jpg)
-
-
+This screen is for a user logged in with the email 'ab@cd.com,' not 'paris@naver.com.' When logged in with this account and navigating to the 'Deck' section, the user can see the decks added under this account: 'Movie,' 'Number,' and 'Physics.' The learning progress is distinct for each user account.
 
 ![Screenshot 49](/screenshots/screenshot49.jpg)
 In the previous version, only a single flashcard could be added. However, a new feature has been added to enable the upload of multiple flashcards via CSV, introducing the Multiple Flashcards additional functionality.
