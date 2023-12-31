@@ -109,9 +109,11 @@ In the presented screenshot, the chosen deck is 'Math_advanced,' the study direc
 Initially, the front side of the flashcard is displayed. Clicking the 'Show Answer' button reveals the answer. At this point, the user can press either 'Got it' or 'Missed it' to indicate their understanding.
 
 ![Screenshot 37](/screenshots/screenshot37.png)
-?
+This screen shows the result after completing a review by selecting one of the two review buttons; the chosen button is now deactivated.
+
 ![Screenshot 38](/screenshots/screenshot38.png)
-?
+The user has positioned the mouse cursor over the "Next" button.
+
 ![Screenshot 39](/screenshots/screenshot39.png)
 Pressing the "Next" button advances to the next card, as shown in the screenshot.
 
@@ -128,7 +130,7 @@ Confirming the application of both reverse card and study direction, observing '
 After completing the learning session, a popup indicates that there are no more cards.
 
 ![Screenshot 44](/screenshots/screenshot44.png)
-?
+The learner is in a situation where they are about to press the "Reset Session" button.
 
 ![Screenshot 45](/screenshots/screenshot45.png)
 Upon completing the study session, a popup confirms that the learning session has concluded.
