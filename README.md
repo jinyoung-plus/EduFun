@@ -133,6 +133,67 @@ After completing the learning session, a popup indicates that there are no more 
 ![Screenshot 45](/screenshots/screenshot45.png)
 Upon completing the study session, a popup confirms that the learning session has concluded.
 
+![Screenshot 46](/screenshots/screenshot46.jpg)
+![Screenshot 47](/screenshots/screenshot47.jpg)
+![Screenshot 48](/screenshots/screenshot48.jpg)
+
+
+
+![Screenshot 49](/screenshots/screenshot49.jpg)
+In the previous version, only a single flashcard could be added. However, a new feature has been added to enable the upload of multiple flashcards via CSV, introducing the Multiple Flashcards additional functionality.
+
+![Screenshot 50](/screenshots/screenshot50.jpg)
+I selected the 'English' deck from among the 'English,' 'French,' and 'Math_advanced' decks, similar to the previous version.
+
+![Screenshot 51](/screenshots/screenshot51.jpg)
+For the 'Front,' I wrote 'Hello' in Korean, and for the 'Back,' I wrote 'Hello' in English.
+
+![Screenshot 52](/screenshots/screenshot52.jpg)
+Upon clicking the 'Add Card' button, the flashcard is stored in the deck and adds a row to the 'funedudb' database under the 'english' deck.
+
+![Screenshot 53](/screenshots/screenshot53.jpg)
+The added flashcards, when the user selects a deck in the 'Display Flashcards' section, display all previously added items from the database. Users can choose from the added 'deck' items.
+
+![Screenshot 54](/screenshots/screenshot54.jpg)
+The 'Hello' item added as a single flashcard is visible.
+
+![Screenshot 55](/screenshots/screenshot55.jpg)
+Let's assume the user uploads an entire CSV file named 'new_flashcard1.csv.' 
+
+![Screenshot 56](/screenshots/screenshot56.jpg)
+Like a single flashcard, the user first sets the deck, in this case, to 'English.'
+
+![Screenshot 57](/screenshots/screenshot57.jpg)
+Before the user selects a file, the previously non-existent guidance text 'No file chosen' appears.
+
+![Screenshot 58](/screenshots/screenshot58.jpg)
+Subsequently, the user selects and uploads the 'new_flashcard1.csv' file.
+
+![Screenshot 59](/screenshots/screenshot59.jpg)
+Upon selection, the chosen file is displayed in the 'Choose file' field.
+
+![Screenshot 60](/screenshots/screenshot60.jpg)
+After selecting 'Upload File,' a notification message appears: 'Flashcards added to deck.'
+
+![Screenshot 61](/screenshots/screenshot61.jpg)
+Similar to adding a single flashcard, the user checks the 'Display Flashcards' section.
+
+![Screenshot 62](/screenshots/screenshot62.jpg)
+In this view, alongside the previously added 'Hello' word, all items from the newly added file, including 'spring,' 'summer,' 'fall,' and 'winter,' are visible.
+
+![Screenshot 63_1](/screenshots/screenshot63_1.jpg)
+![Screenshot 63_2](/screenshots/screenshot63_2.jpg)
+If the user clicks the 'Edit' button, both the 'front' and 'back' parts can be modified.
+
+![Screenshot 64_1](/screenshots/screenshot64_1.jpg)
+![Screenshot 64_2](/screenshots/screenshot64_2.jpg)
+When the user clicks the 'Delete' button, one word can be deleted from the multiple words added via CSV.
+
+![Screenshot 65](/screenshots/screenshot65.jpg)
+During deletion, unlike the 'Edit' button, the user is prompted with a confirmation message: 'Are you sure you want to delete this flashcard?'
+
+![Screenshot 66](/screenshots/screenshot66.jpg)
+Only the 'winter' item is deleted, and upon rechecking the 'display flashcards' section, only four words, excluding 'winter,' are visible to the use
 
 ## Code scaffolding
 
