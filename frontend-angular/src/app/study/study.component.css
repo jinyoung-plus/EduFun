@@ -24,6 +24,9 @@
   margin-top: 20px; /* This ensures there is some space above the start button */
 }
 
+.end-btn {
+  margin-top: 20px; /* This ensures there is some space above the start button */
+}
 .selection-group:last-child {
   margin-right: 0;
 }
@@ -82,9 +85,6 @@
   margin-top: 20px; /* Adjust as needed */
 }
 
-.end-session-btn {
-  margin-top: 30px; /* Adjust as needed */
-}
 
 .container {
   max-width: 60%;
@@ -117,10 +117,6 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 10px; /* Adjust as needed */
-}
-
-.end-session-btn {
-  margin-top: 20px; /* Adjust as needed */
 }
 
 
@@ -184,7 +180,7 @@
   visibility: hidden; /* Hide the placeholder initially */
 }
 
-.start-btn, .answer-btn, .btn {
+.start-btn, .answer-btn, .btn, .end-btn {
   padding: 10px;
   margin: 30px auto;
   display: block;
@@ -201,8 +197,13 @@
 }
 
 .start-btn {
-  margin-left: 50px;
+  margin-left: 20px;
   background-color: #198754;
+}
+
+.end-btn {
+  margin-left: 15px;
+  background-color: darkslategrey;
 }
 
 .answer-btn {
@@ -259,15 +260,7 @@ button:hover {
   display: none; /* Remove if not needed */
 }
 
-.end-btn {
-  width: 100%;
-  padding: 10px 20px;
-  background-color: darkslategrey;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+
 
 .navigation-buttons {
   display: flex;

@@ -32,6 +32,7 @@
         </div>
 
         <button class="start-btn" (click)="startStudy()">Start!</button>
+        <button class="end-btn" (click)="endSession()">Reset Session</button>
       </div>
 
         <h2 class="deck-title" *ngIf="selectedDeck">{{ selectedDeck.name }}</h2>
@@ -56,7 +57,6 @@
             <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Show Answer</button>
         </div>
 
-        <button class="end-btn" (click)="endSession()">Reset Session</button>
     </section>
     </div>
 

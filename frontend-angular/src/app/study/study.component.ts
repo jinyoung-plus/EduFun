@@ -211,7 +211,7 @@ export class StudyComponent implements OnInit {
 
 
 
-    alert('Study session ended.');
+    alert('Reset study session.');
     // Reset session state
     this.currentDeck = null;
     this.currentCard = null;
