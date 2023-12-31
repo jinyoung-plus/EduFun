@@ -180,6 +180,7 @@ CREATE TRIGGER update_reviews_modtime
    - Start the Backend Server:
      Launch the backend server by running the following command:
       node server.js
+
     This command starts the Express server on the specified port, which defaults to 3000.
 
 ## 5. Building the Frontend
