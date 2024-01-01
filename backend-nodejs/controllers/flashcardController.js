@@ -60,37 +60,27 @@ const flashcardController = {
     // 플래시카드 업데이트 (복습 후)
     async update(req, res) {
         try {
-            const {front, back, performanceRating} = req.body;
-            const flashcard = await Flashcard.findByPk(req.params.id);
-
-            if (!flashcard) {
-                return res.status(404).send({message: 'Flashcard not found.'});
-            }
-
-            // 사용자의 성능 평가에 따라 SRS 알고리즘 적용
-            const {newInterval, newEasinessFactor} = srsAlgorithm(
-                performanceRating,
-                flashcard.interval_days,
-                flashcard.easiness_factor
-            );
+            const { front, back, intervalDays, easinessFactor, repetitions } = req.body;
+            const flashcardId = req.params.id;
 
             const updated = await Flashcard.update({
                 front,
                 back,
-                easiness_factor: newEasinessFactor,
-                interval_days: newInterval,
-                repetitions: flashcard.repetitions + 1
+                easiness_factor: easinessFactor,
+                interval_days: intervalDays,
+                repetitions: repetitions
             }, {
-                where: {id: req.params.id, user_id: req.user.id}
+                where: { id: flashcardId, user_id: req.user.id }
             });
 
             if (updated[0] > 0) {
-                res.status(200).send({message: 'Flashcard updated.'});
+                res.status(200).send({ message: 'Flashcard updated.' });
             } else {
-                res.status(404).send({message: 'Flashcard not found.'});
+                res.status(404).send({ message: 'Flashcard not found.' });
             }
         } catch (error) {
-            res.status(500).send({message: 'Failed to update flashcard.'});
+            console.error(error); // 에러 로깅
+            res.status(500).send({ message: `Failed to update flashcard: ${error.message}` });
         }
     },
 

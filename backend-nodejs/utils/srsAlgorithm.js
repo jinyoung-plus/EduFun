@@ -7,16 +7,33 @@
  * @return {Object} 새 복습 간격과 용이성 계수
  */
 function calculateSRS(performanceRating, currentInterval, easinessFactor) {
-    if (performanceRating < 3) {
-        // 성능 평가가 낮으면 복습 간격 초기화
-        return { newInterval: 1, newEasinessFactor: easinessFactor };
+    let invalidParams = [];
+    if (typeof performanceRating !== 'number') {
+        invalidParams.push(`performanceRating expected a number, got ${typeof performanceRating}`);
+    }
+    if (typeof currentInterval !== 'number') {
+        invalidParams.push(`currentInterval expected a number, got ${typeof currentInterval}`);
+    }
+    if (typeof easinessFactor !== 'number') {
+        invalidParams.push(`easinessFactor expected a number, got ${typeof easinessFactor}`);
+    }
+    if (performanceRating < 1 || performanceRating > 5) {
+        invalidParams.push(`performanceRating out of range, got ${performanceRating}`);
+    }
+    if (easinessFactor < 1.3) {
+        invalidParams.push(`easinessFactor below minimum, got ${easinessFactor}`);
+    }
+    if (!isFinite(currentInterval)) {
+        invalidParams.push(`currentInterval not finite, got ${currentInterval}`);
     }
 
-    // 용이성 계수 업데이트
-    let newEasinessFactor = easinessFactor - 0.8 + 0.28 * performanceRating - 0.02 * performanceRating * performanceRating;
-    newEasinessFactor = Math.max(1.3, newEasinessFactor); // 용이성 계수는 1.3 이상이어야 함
+    if (invalidParams.length > 0) {
+        throw new Error('Invalid input parameters: ' + invalidParams.join('; '));
+    }
 
-    // 새 복습 간격 계산
+    let newEasinessFactor = easinessFactor - 0.8 + 0.28 * performanceRating - 0.02 * performanceRating ** 2;
+    newEasinessFactor = Math.max(1.3, newEasinessFactor);
+
     let newInterval;
     if (currentInterval === 0) {
         newInterval = 1;
@@ -26,7 +43,12 @@ function calculateSRS(performanceRating, currentInterval, easinessFactor) {
         newInterval = Math.round(currentInterval * newEasinessFactor);
     }
 
+    if (!isFinite(newInterval) || !isFinite(newEasinessFactor)) {
+        throw new Error('Invalid SRS calculation result');
+    }
+
     return { newInterval, newEasinessFactor };
 }
 
 module.exports = calculateSRS;
+

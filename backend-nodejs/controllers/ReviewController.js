@@ -1,56 +1,67 @@
 // EduFun/backend-nodejs/controllers/ReviewController.js
 const { Review, Flashcard } = require('../models/models');
-const srsAlgorithm = require('../utils/srsAlgorithm');
 
 const ReviewController = {
     async create(req, res) {
+        if (!req.user || !req.user.id) {
+            return res.status(401).send({ message: 'Authentication required' });
+        }
+
+        const userId = req.user.id;
+        const {
+            flashcard_id,
+            performance_rating,
+            study_session_id,
+            newInterval,
+            newEasinessFactor,
+            repetitions
+        } = req.body;
+
+        if (!flashcard_id || !performance_rating || !study_session_id ||
+            newInterval === undefined || newEasinessFactor === undefined || repetitions === undefined) {
+            return res.status(400).send({ message: 'Missing required fields.' });
+        }
+
         try {
-            const { flashcard_id, performance_rating, study_session_id } = req.body;
-            const flashcard = await Flashcard.findByPk(flashcard_id);
-
-            if (!flashcard) {
-                return res.status(404).send({ message: 'Flashcard not found.' });
-            }
-
-            // SRS 알고리즘을 사용해 복습 데이터를 계산합니다.
-            const { newInterval, newEasinessFactor } = srsAlgorithm(
-                performance_rating,
-                flashcard.interval_days,
-                flashcard.easiness_factor
-            );
-
-            // 새로운 복습 날짜를 계산합니다.
-            const nextReviewDate = new Date();
-            nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
-
-            const newReview = await Review.create({
-                flashcard_id,
-                study_session_id,
-                performance_rating,
-                review_time: new Date(),
-                next_review_date: nextReviewDate,
-                interval_days: newInterval,
-                easiness_factor: newEasinessFactor,
-                // 'repetitions'은 Flashcard 모델에서 업데이트 해야 합니다.
-            });
-
-            // 플래시카드 모델의 복습 관련 데이터를 업데이트합니다.
-            await Flashcard.update(
-                {
+            // 플래시카드 업데이트와 리뷰 생성을 하나의 트랜잭션으로 처리
+            const result = await sequelize.transaction(async (t) => {
+                // 플래시카드 업데이트
+                const [updated] = await Flashcard.update({
                     easiness_factor: newEasinessFactor,
                     interval_days: newInterval,
-                    repetitions: flashcard.repetitions + 1
-                },
-                {
-                    where: { id: flashcard_id }
-                }
-            );
+                    repetitions
+                }, {
+                    where: { id: flashcard_id, user_id: userId },
+                    transaction: t
+                });
 
-            res.status(201).json(newReview);
+                if (!updated) {
+                    throw new Error('Flashcard not found or user not authorized.');
+                }
+
+                // 새 리뷰 생성
+                const newReview = await Review.create({
+                    flashcard_id,
+                    study_session_id,
+                    performance_rating,
+                    review_time: new Date(),
+                    next_review_date: new Date(Date.now() + newInterval * 24 * 60 * 60 * 1000),
+                    interval_days: newInterval,
+                    easiness_factor: newEasinessFactor,
+                    repetitions
+                }, { transaction: t });
+
+                return newReview;
+            });
+
+            res.status(201).json(result);
         } catch (error) {
-            res.status(500).send({ message: 'Failed to create review.' });
+            console.error('Error creating review:', error);
+            res.status(500).send({ message: 'Error creating review.' });
         }
     }
 };
 
+
 module.exports = ReviewController;
+

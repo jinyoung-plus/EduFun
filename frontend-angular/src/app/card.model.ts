@@ -11,6 +11,7 @@ export interface Card {
 // Extend the Card interface to include properties for the review session
 export interface ReviewCard extends Card {
     review: boolean;
+    repetitions: number; // 복습 횟수
     currentInterval: number; // Assuming this is a number
     easinessFactor: number; // Assuming this is a number
 }

@@ -23,6 +23,18 @@
     padding: 2rem;
 }
 
+/* Add these styles to align the header to the right */
+.number-of-cards-header {
+    text-align: right;
+    padding-right: 20px; /* Adjust the value as needed */
+}
+
+/* Add these styles to align the card count numbers to the left */
+.card-count {
+    text-align: center;
+    padding-left: 20px; /* Adjust the value as needed */
+}
+
 .table {
     margin-top: 1rem;
     width: 100%;

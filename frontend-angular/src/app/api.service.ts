@@ -85,14 +85,6 @@ export class ApiService {
     return this.http.get<Card[]>(`/api/decks/${deckId}/cards`);
   }
 
-  updateCard(cardId: number, cardData: any): Observable<any> {
-    // API 엔드포인트를 사용하여 카드 정보를 업데이트하는 로직
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.getToken()}` // 여기에 인증 토큰을 추가
-    });
-    return this.http.put(`${this.BASE_URL}/flashcards/${cardId}`, cardData, { headers });
-  }
 
   // Flashcards
   getFlashcardsForDeck(token: string, deckId: number) {
@@ -141,27 +133,28 @@ export class ApiService {
     return this.http.post(`${this.BASE_URL}/save-session`, { reviewedCards }, { headers });
   }
 
-  // Study Sessions
-  createStudySession(token: string) {
+  // 학습 세션을 시작하는 메서드
+  startStudySession(token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.BASE_URL}/study-sessions`, {}, { headers });
+    return this.http.post(`${this.BASE_URL}/study-sessions/start`, {}, { headers });
   }
 
-  endStudySession(token: string, sessionId: number) {
+  // 학습 세션을 종료하는 메서드
+  endStudySession(token: string, sessionId: number): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put(`${this.BASE_URL}/study-sessions/${sessionId}`, {}, { headers });
+    return this.http.post(`${this.BASE_URL}/study-sessions/end`, { sessionId }, { headers });
   }
 
-  // Reviews
-  createReview(token: string, flashcardId: number, performanceRating: number, studySessionId: number) {
+  // 리뷰 정보를 저장하는 메서드
+  createReview(token: string, reviewData: any): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.BASE_URL}/reviews`, {
-      flashcard_id: flashcardId,
-      performance_rating: performanceRating,
-      study_session_id: studySessionId
-    }, { headers });
+    return this.http.post(`${this.BASE_URL}/reviews`, reviewData, { headers });
   }
 
-  // ... other API methods
+  // 카드 정보를 업데이트하는 메서드
+  updateCard(token: string, cardId: number, cardData: any): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.BASE_URL}/flashcards/${cardId}`, cardData, { headers });
+  }
 
 }
