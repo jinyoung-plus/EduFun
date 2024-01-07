@@ -2,7 +2,11 @@
 <div class="study-wrapper">
   <div class="container study-container">
     <header class="header_ss">
-      <h1>Let's Study</h1>
+        <div class="session-buttons">
+        <!-- Removed the h1 and added two buttons -->
+            <button class="start-study-session-btn" (click)="startStudySession()">Launch Study</button>
+            <button class="end-study-btn" (click)="endStudySession()" [disabled]="!isStudySessionActive">End Study</button>
+        </div>
     </header>
     <section class="study-session">
       <div class="deck-selection">
@@ -28,11 +32,12 @@
             <option value="sequential" selected>Sequential</option>
             <option value="random">Random</option>
             <option value="reverse">Reverse</option>
+            <option value="srs">SRS (Spaced Repetition)</option>
           </select>
         </div>
 
-        <button class="start-btn" (click)="startStudy()">Start!</button>
-        <button class="end-btn" (click)="endSession()">Reset</button>
+          <button class="start-study-btn" (click)="beginFlashcardStudy()">Start!</button>
+       <!-- <button class="end-btn" (click)="endSession()">Reset</button> -->
       </div>
 
         <h2 class="deck-title" *ngIf="selectedDeck">{{ selectedDeck.name }}</h2>
@@ -48,23 +53,21 @@
             </div>
         </div>
 
+      <div class="card-control-buttons">
+        <button class="nav-btn prev-btn" (click)="previousCard()"><< Pre</button>
+
+        <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Show Answer</button>
+
         <div class="review-buttons" *ngIf="showAnswerFlag && currentCard">
-            <button class="btn success" [class.grey-out]="buttonsDisabled" [disabled]="buttonsDisabled" (click)="reviewCard(currentCard.id, 3)">Got it!</button>
-            <button class="btn danger" [class.grey-out]="buttonsDisabled" [disabled]="buttonsDisabled" (click)="reviewCard(currentCard.id, 1)">Missed it!</button>
+          <button class="btn success" [class.grey-out]="buttonsDisabled" [disabled]="buttonsDisabled" (click)="reviewCard(currentCard.id, 3)">Easy</button>
+          <button class="btn danger" [class.grey-out]="buttonsDisabled" [disabled]="buttonsDisabled" (click)="reviewCard(currentCard.id, 1)">Difficult</button>
         </div>
 
-        <div class="navigation-buttons">
-            <button class="answer-btn" *ngIf="!showAnswerFlag" (click)="showAnswer()">Show Answer</button>
-        </div>
+        <button class="nav-btn next-btn" (click)="nextCard()">Next >></button>
+      </div>
 
     </section>
     </div>
 
-    <button class="nav-btn prev-btn" (click)="previousCard()"><< Previous</button>
-    <button class="nav-btn next-btn" (click)="nextCard()">Next >></button>
-    <!-- 사용자 메시지 표시 부분 -->
-    <div *ngIf="userMessage" class="user-message">
-        {{ userMessage }}
-    </div>
 </div>
 

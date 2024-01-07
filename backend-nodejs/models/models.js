@@ -1,4 +1,5 @@
 // EduFun/backend-nodejs/models/models.js
+
 const { Sequelize, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize('postgres://funedu:1234@localhost:5432/funedudb');
@@ -137,7 +138,6 @@ const Flashcard = sequelize.define('flashcards', {
 });
 
 
-// StudySession 모델 정의
 const StudySession = sequelize.define('study_sessions', {
   id: {
     type: DataTypes.INTEGER,
@@ -163,9 +163,21 @@ const StudySession = sequelize.define('study_sessions', {
     type: DataTypes.DATE,
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     allowNull: false
+  },
+  // Add the updated_at column
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    allowNull: false
   }
 }, {
-  timestamps: false
+  timestamps: false, // If you're not using Sequelize's built-in timestamps
+  // If you're using Sequelize's built-in timestamps, you can remove timestamps: false and Sequelize will automatically handle created_at and updated_at
+});
+
+// Optional: Sequelize hooks for manually updating the 'updated_at' field if not using built-in timestamps
+StudySession.beforeUpdate((session, options) => {
+  session.updated_at = Sequelize.literal('CURRENT_TIMESTAMP');
 });
 
 // Review 모델 정의

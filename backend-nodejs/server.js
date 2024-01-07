@@ -14,26 +14,23 @@ const flashcardController = require('./controllers/flashcardController');
 const StudySessionController = require('./controllers/StudySessionController');
 const ReviewController = require('./controllers/ReviewController');
 const deckController = require('./controllers/deckController');
+const ChartController = require('./controllers/ChartController');
 
 
 // JWT 검증 미들웨어
 const jwtMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7, authHeader.length); // Skip the 'Bearer ' part
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-here');
+      req.user = decoded;
+      next();
+    } catch (error) {
+      return res.status(403).send({ errorCode: 'INVALID_TOKEN', message: 'Invalid authentication token.' });
+    }
+  } else {
     return res.status(401).send({ errorCode: 'NO_AUTH_HEADER', message: 'No authentication token provided.' });
-  }
-
-  const token = authHeader.split(' ')[1]; // "Bearer TOKEN"에서 TOKEN 부분을 가져옵니다.
-  if (!token) {
-    return res.status(401).send({ errorCode: 'NO_TOKEN', message: 'Authentication token is not provided.' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-here');
-    req.user = decoded;
-    next();
-  } catch (error) {
-    return res.status(403).send({ errorCode: 'INVALID_TOKEN', message: 'Invalid authentication token.' });
   }
 };
 
@@ -66,9 +63,14 @@ app.delete('/flashcards/:id', jwtMiddleware, flashcardController.delete);
 // Study Sessions 관련 라우트
 app.post('/study-sessions', jwtMiddleware, StudySessionController.create);
 app.put('/study-sessions/:id', jwtMiddleware, StudySessionController.end);
+app.patch('/study-sessions/unfinished', jwtMiddleware, StudySessionController.handleUnfinishedSession);
 
 // Reviews 관련 라우트
-app.post('/reviews', jwtMiddleware, ReviewController.create);
+//app.post('/reviews', jwtMiddleware, ReviewController.create);
+app.post('/reviews/process', jwtMiddleware, ReviewController.createReview);
+
+// Chart 관련 라우트
+app.get('/weekly-study-data', jwtMiddleware, ChartController.getWeeklyStudyData);
 
 // 데이터베이스 동기화 및 서버 시작
 sequelize.sync({ force: false }).then(() => {

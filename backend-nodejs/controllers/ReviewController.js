@@ -1,67 +1,80 @@
 // EduFun/backend-nodejs/controllers/ReviewController.js
-const { Review, Flashcard } = require('../models/models');
+const { Flashcard, Review } = require('../models/models');
+const srsAlgorithm = require('../utils/srsAlgorithm');
 
 const ReviewController = {
-    async create(req, res) {
-        if (!req.user || !req.user.id) {
-            return res.status(401).send({ message: 'Authentication required' });
-        }
+  async createReview(req, res) {
+    const { flashcardId, performanceRating, studySessionId } = req.body;
+    console.log("Received request body:", req.body); // 로그 변경
 
-        const userId = req.user.id;
-        const {
-            flashcard_id,
-            performance_rating,
-            study_session_id,
-            newInterval,
-            newEasinessFactor,
-            repetitions
-        } = req.body;
+    try {
+      if (!flashcardId || !performanceRating || !studySessionId) {
+        console.error("Validation error: Missing required fields in the request body"); // 로그 변경
+        return res.status(400).send({ message: "Missing required fields." });
+      }
 
-        if (!flashcard_id || !performance_rating || !study_session_id ||
-            newInterval === undefined || newEasinessFactor === undefined || repetitions === undefined) {
-            return res.status(400).send({ message: 'Missing required fields.' });
-        }
+      const flashcard = await Flashcard.findByPk(flashcardId);
+      if (!flashcard) {
+        console.error(`Flashcard not found for ID: ${flashcardId}`); // 로그 변경
+        return res.status(404).send({ message: 'Flashcard not found' });
+      }
 
-        try {
-            // 플래시카드 업데이트와 리뷰 생성을 하나의 트랜잭션으로 처리
-            const result = await sequelize.transaction(async (t) => {
-                // 플래시카드 업데이트
-                const [updated] = await Flashcard.update({
-                    easiness_factor: newEasinessFactor,
-                    interval_days: newInterval,
-                    repetitions
-                }, {
-                    where: { id: flashcard_id, user_id: userId },
-                    transaction: t
-                });
+      const srsData = srsAlgorithm(
+        performanceRating,
+        flashcard.interval_days,
+        flashcard.easiness_factor,
+        flashcard.repetitions
+      );
 
-                if (!updated) {
-                    throw new Error('Flashcard not found or user not authorized.');
-                }
+      console.log("SRS Algorithm output:", srsData); // SRS 알고리즘 결과 로그 추가
 
-                // 새 리뷰 생성
-                const newReview = await Review.create({
-                    flashcard_id,
-                    study_session_id,
-                    performance_rating,
-                    review_time: new Date(),
-                    next_review_date: new Date(Date.now() + newInterval * 24 * 60 * 60 * 1000),
-                    interval_days: newInterval,
-                    easiness_factor: newEasinessFactor,
-                    repetitions
-                }, { transaction: t });
+      const updateResult = await Flashcard.update({
+        easiness_factor: srsData.newEasinessFactor,
+        interval_days: srsData.newInterval,
+        repetitions: srsData.repetitions
+      }, {
+        where: { id: flashcardId }
+      });
 
-                return newReview;
-            });
+      console.log(`Flashcard update result for ID: ${flashcardId}:`, updateResult); // 플래시카드 업데이트 결과 로그 추가
 
-            res.status(201).json(result);
-        } catch (error) {
-            console.error('Error creating review:', error);
-            res.status(500).send({ message: 'Error creating review.' });
-        }
+      // Calculate next review date
+      const reviewTime = new Date();
+      const nextReviewDate = new Date(reviewTime.getTime() + srsData.newInterval * 24 * 60 * 60 * 1000);
+
+      console.log(`Calculated nextReviewDate: ${nextReviewDate.toISOString()}`); // nextReviewDate 계산 로그 추가
+
+// 로그를 추가하여 저장하기 전에 값들을 확인
+      console.log({
+        flashcard_id: flashcardId,
+        study_session_id: studySessionId,
+        performance_rating: performanceRating,
+        reviewTime: reviewTime.toISOString(),
+        nextReviewDate: nextReviewDate.toISOString(), // ISO 문자열로 변환하여 로깅
+        intervalDays: srsData.newInterval,
+        easinessFactor: srsData.newEasinessFactor,
+        repetitions: srsData.repetitions
+      });
+
+      const newReview = await Review.create({
+        flashcard_id: flashcardId,
+        study_session_id: studySessionId,
+        performance_rating: performanceRating,
+        review_time: reviewTime, // 이 부분은 이미 맞게 설정되어 있습니다.
+        next_review_date: nextReviewDate, // 'nextReviewDate'에서 'next_review_date'로 변경
+        interval_days: srsData.newInterval, // 'intervalDays'에서 'interval_days'로 변경
+        easiness_factor: srsData.newEasinessFactor, // 'easinessFactor'에서 'easiness_factor'로 변경
+        repetitions: srsData.repetitions
+      });
+
+      console.log("New review record created:", newReview); // 새 리뷰 레코드 생성 로그 추가
+
+      res.status(201).json(newReview);
+    } catch (error) {
+      console.error("Error during review creation:", error); // 로그 변경
+      res.status(500).send({ message: 'Failed to create review', error: error.message });
     }
+  }
 };
 
-
 module.exports = ReviewController;
-

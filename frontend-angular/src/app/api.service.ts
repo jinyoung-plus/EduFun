@@ -1,7 +1,7 @@
 
 // EduFun/frontend-angular/src/app/api.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Card, ReviewCard } from './card.model'; // 'Card' 인터페이스 임포트
 
@@ -15,9 +15,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  calculateSRS(performanceRating: number, currentInterval: number, easinessFactor: number): Observable<any> {
-    const url = `${this.BASE_URL}/api/calculate`; // URL을 '/api/calculate'로 수정
-    const body = { performanceRating, currentInterval, easinessFactor };
+  calculateSRS(performanceRating: number, currentInterval: number, easinessFactor: number, repetitions: number): Observable<any> {
+    const url = `${this.BASE_URL}/api/calculate`; // Ensure this URL matches your actual API endpoint
+    const body = { performanceRating, currentInterval, easinessFactor, repetitions };
 
     return this.http.post(url, body);
   }
@@ -92,6 +92,17 @@ export class ApiService {
     return this.http.get<any[]>(`${this.BASE_URL}/decks/${deckId}/flashcards`, { headers });
   }
 
+  // Method to get flashcards for a deck sorted by SRS algorithm
+  getFlashcardsForDeckSRS(token: string, deckId: number): Observable<Card[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // This endpoint should return cards sorted based on the SRS algorithm criteria
+    // Adjust the endpoint as needed based on your actual API implementation
+    return this.http.get<Card[]>(`${this.BASE_URL}/api/decks/${deckId}/flashcards/srs`, { headers });
+  }
+
 
   getFlashcards(token: string) {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -134,17 +145,28 @@ export class ApiService {
   }
 
   // 학습 세션을 시작하는 메서드
+  // Method to start a new study session
   startStudySession(token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.BASE_URL}/study-sessions/start`, {}, { headers });
+    return this.http.post(`${this.BASE_URL}/study-sessions`, {}, { headers });
   }
 
-  // 학습 세션을 종료하는 메서드
+// Method to end a study session
   endStudySession(token: string, sessionId: number): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.BASE_URL}/study-sessions/end`, { sessionId }, { headers });
+    // The request is changed to PUT and the sessionId is included in the URL path
+    return this.http.put(`${this.BASE_URL}/study-sessions/${sessionId}`, {}, { headers });
   }
 
+  // Method to send the review data to the backend for processing
+  processReview(token: string, reviewData: { flashcardId: number; studySessionId: number; performanceRating: number }): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post(`${this.BASE_URL}/reviews/process`, reviewData, { headers });
+  }
   // 리뷰 정보를 저장하는 메서드
   createReview(token: string, reviewData: any): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -157,4 +179,25 @@ export class ApiService {
     return this.http.put(`${this.BASE_URL}/flashcards/${cardId}`, cardData, { headers });
   }
 
+  getWeeklyStudyData(startDate: Date, endDate: Date): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Authentication token not found');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Format the dates as YYYY-MM-DD
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
+    // Add the startDate and endDate as query parameters
+    const params = new HttpParams()
+        .set('startDate', formattedStartDate)
+        .set('endDate', formattedEndDate);
+
+    return this.http.get(`${this.BASE_URL}/weekly-study-data`, { headers, params });
+  }
 }

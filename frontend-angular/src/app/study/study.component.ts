@@ -23,12 +23,15 @@ export class StudyComponent implements OnInit {
   studyDirection: string = 'basic'; // New property for study direction
   cardOrder: string = 'sequential'; // New property for card order
   private currentStudySessionId: number | null = null;
+  isStudySessionActive: boolean = false;
+  studySessionId: number | null = null;
+  // Add new property to track if a flashcard review has started
+  isFlashcardStudyActive: boolean = false;
 
-  private getCurrentStudySessionId(): number | null {
-    // 현재 학습 세션 ID를 반환합니다.
-    // 실제 구현은 앱의 상태 관리 방식에 따라 다를 수 있습니다.
-    return this.currentStudySessionId;
-  }
+    private getCurrentStudySessionId(): number | null {
+        const storedSessionId = localStorage.getItem('activeStudySessionId');
+        return storedSessionId ? parseInt(storedSessionId) : null;
+    }
 
   constructor(
       private apiService: ApiService,
@@ -37,6 +40,11 @@ export class StudyComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDecks();
+    const activeSessionId = localStorage.getItem('activeStudySessionId');
+    if (activeSessionId) {
+      this.studySessionId = Number(activeSessionId);
+      this.isStudySessionActive = true;
+    }
   }
 
   onSelectDeck(): void {
@@ -49,60 +57,127 @@ export class StudyComponent implements OnInit {
         (decks) => {
           this.decks = decks.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
         },
-      error => {
-        console.error('Error fetching decks', error);
-      }
+        error => {
+          console.error('Error fetching decks', error);
+        }
     );
   }
-  // Updated startStudy method
-  startStudy(): void {
-    if (!this.selectedDeckId) {
-      alert('Please select a deck to start studying.');
-      return;
-    }
-    const deckId = Number(this.selectedDeckId);
-    this.selectedDeck = this.decks.find(deck => deck.id === this.selectedDeckId);
 
-    if (deckId) {
-      const token = localStorage.getItem('authToken') || '';
-      if (token) {
-        this.apiService.getFlashcardsForDeck(token, deckId).subscribe(
-          (cards: Card[]) => {
-            this.reviewSession = cards.map(card => ({
-              ...card, // 기존 카드 속성들을 펼쳐 넣습니다.
-              review: false, // 복습 여부를 false로 초기화합니다.
-              currentInterval: 0, // 현재 간격을 0으로 초기화합니다.
-              easinessFactor: 2.5, // 용이성 계수를 2.5로 초기화합니다.
-              repetitions: 0, // 복습 횟수를 0으로 초기화합니다.
-            }));
-
-            // Randomize the cards if 'random' is selected
-            if (this.cardOrder === 'random') {
-              this.shuffleArray(this.reviewSession);
-            }
-
-            // Reverse the cards if 'reverse' is selected
-            if (this.studyDirection === 'reverse') {
-              this.reviewSession.forEach(card => {
-                [card.front, card.back] = [card.back, card.front];
-              });
-            }
-
-            // Set the first card
-            this.setFirstCard();
-            this.currentStudySessionId = this.createStudySessionId();
-          },
-          error => console.error('Error fetching flashcards', error)
-        );
-      } else {
-        console.error('No auth token found');
-      }
-    } else {
-      console.error('No deck selected');
+  onSelectCardOrder(): void {
+    if (this.cardOrder === 'srs') {
+      // SRS 기반 학습 시작 로직을 호출합니다.
+      this.beginFlashcardStudy();
     }
   }
+  // Updated startStudy method
+  // Method to begin flashcard review for a selected deck
+    beginFlashcardStudy(): void {
+        if (!this.selectedDeckId) {
+            alert('Please select a deck to start studying.');
+            return;
+        }
+        if (this.isFlashcardStudyActive) {
+            alert('Flashcard study is already in progress.');
+            return;
+        }
+        const deckId = Number(this.selectedDeckId);
+        this.selectedDeck = this.decks.find(deck => deck.id === this.selectedDeckId);
 
-  private createStudySessionId(): number {
+        if (deckId) {
+            const token = this.getToken();
+            if (token) {
+                // 학습 세션을 시작하는 로직을 추가합니다.
+                this.startStudySession().then(() => {
+                    // 세션 시작이 성공적으로 완료되면 카드를 가져옵니다.
+                    if (this.cardOrder === 'srs') {
+                        this.apiService.getFlashcardsForDeckSRS(token, deckId).subscribe(
+                            (cards: Card[]) => {
+                                // 카드를 ReviewCard 형태로 매핑합니다.
+                                this.reviewSession = cards.map(card => ({
+                                    ...card,
+                                    review: false,
+                                    currentInterval: 0,
+                                    easinessFactor: 2.5,
+                                    repetitions: 0,
+                                }));
+                                this.setFirstCard();
+                            },
+                            error => console.error('Error fetching flashcards for SRS', error)
+                        );
+                    } else {
+                        this.apiService.getFlashcardsForDeck(token, deckId).subscribe(
+                            (cards: Card[]) => {
+                                this.reviewSession = cards.map(card => ({
+                                    ...card,
+                                    review: false,
+                                    currentInterval: 0,
+                                    easinessFactor: 2.5,
+                                    repetitions: 0,
+                                }));
+                                // 카드 순서를 적용합니다.
+                                if (this.cardOrder === 'random') {
+                                    this.shuffleArray(this.reviewSession);
+                                } else if (this.cardOrder === 'reverse') {
+                                    this.reviewSession = this.reviewSession.reverse();
+                                }
+                                // 카드 방향을 적용합니다.
+                                if (this.studyDirection === 'reverse') {
+                                    this.reviewSession.forEach(card => {
+                                        [card.front, card.back] = [card.back, card.front];
+                                    });
+                                }
+                                this.setFirstCard();
+                            },
+                            error => console.error('Error fetching flashcards', error)
+                        );
+                    }
+                }).catch(error => {
+                    console.error('Failed to start a new study session', error);
+                });
+            } else {
+                console.error('No auth token found');
+            }
+        } else {
+            console.error('No deck selected');
+        }
+    }
+
+  startStudySession(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.isStudySessionActive) {
+       // alert('A study session is already in progress.'); // 사용자에게 학습 세션이 이미 진행 중임을 알립니다.
+        resolve();
+        return;
+      }
+
+      const token = this.getToken();
+      if (!token) {
+        alert('You must be logged in to start a study session.');
+        reject();
+        return;
+      }
+
+      this.apiService.startStudySession(token).subscribe(
+        (response) => {
+          this.studySessionId = response.id;
+          this.isStudySessionActive = true;
+          localStorage.setItem('activeStudySessionId', this.studySessionId!.toString());
+          alert('The study session has started.'); // 학습 세션 시작 메시지를 사용자에게 보여줍니다.
+          resolve();
+        },
+        (error) => {
+          console.error('Failed to start study session', error);
+          if (error.status === 400) {
+            alert(error.error.message);
+          } else {
+            alert('There was an error starting the study session. Please try again.');
+          }
+          reject();
+        }
+      );
+    });
+  }
+    private createStudySessionId(): number {
     // 현재 시간의 타임스탬프를 유니크한 학습 세션 ID로 사용합니다.
     return Date.now();
   }
@@ -159,89 +234,112 @@ export class StudyComponent implements OnInit {
     }
   }
 
-  // 리뷰카드 메서드
+    // Method to handle the review of a card
+  // Method to handle the review of a card
   reviewCard(cardId: number, performanceRating: number): void {
     if (this.buttonsDisabled) {
-      // 이미 처리 중인 요청이 있으면 더 이상 진행하지 않음
+      // If a request is already in process, do not proceed
       return;
     }
 
-    this.buttonsDisabled = true; // 버튼을 비활성화하여 중복 클릭 방지
+    this.buttonsDisabled = true; // Disable buttons to prevent duplicate submissions
 
-    // 로컬 스토리지에서 사용자 토큰을 가져옴
+    // Retrieve the user's auth token from local storage
     const token: string | null = localStorage.getItem('authToken');
 
-    // 선택된 카드를 찾음
+    // Ensure that a study session ID is present before proceeding
+    if (!this.studySessionId) {
+      console.error('No active study session. Cannot create review.');
+      this.buttonsDisabled = false; // Re-enable the buttons
+      return;
+    }
+
+    // Find the selected card in the review session
     const card = this.reviewSession.find(card => card.id === cardId);
     if (!card || !token) {
       console.error(`Card with ID: ${cardId} not found in review session or user is not authenticated`);
-      this.buttonsDisabled = false; // 버튼을 다시 활성화
+      this.buttonsDisabled = false; // Re-enable the buttons
       return;
     }
 
-    // 로그를 남기고 SRS 계산을 위한 요청을 보냄
-      console.log(`Reviewing card with ID: ${cardId} and performance rating: ${performanceRating}`);
-      this.apiService.calculateSRS(performanceRating, card.currentInterval, card.easinessFactor).subscribe(
-           response => {
-          // SRS 계산 응답을 받고 카드를 업데이트
-          console.log('Received SRS calculation response:', response);
-
-          // 현재 진행 중인 학습 세션 ID를 얻어야 함
-          const studySessionId = this.getCurrentStudySessionId(); // 현재 학습 세션 ID를 얻는 메소드가 필요함
-
-          // 리뷰 정보를 서버에 전송하여 저장
-          this.apiService.createReview(token,{
-            flashcardId: cardId,
-            studySessionId: studySessionId,
-               performanceRating: performanceRating,
-               newInterval: response.newInterval,
-               newEasinessFactor: response.newEasinessFactor,
-               repetitions: card.repetitions
-          }).subscribe(
-              reviewResponse => {
-                console.log('Review recorded successfully', reviewResponse);
-                this.buttonsDisabled = false; // 버튼을 다시 활성화
-              },
-              reviewError => {
-                console.error('Failed to record review', reviewError);
-                this.buttonsDisabled = false; // 버튼을 다시 활성화
-              }
-          );
-        },
-        srsError => {
-          console.error('Error calculating SRS', srsError);
-          this.buttonsDisabled = false; // 버튼을 다시 활성화
-          this.reviewMade = false; // 리뷰 상태를 초기화
-        }
+    // Call the API service method to process the review on the backend
+    this.apiService.processReview(token, {
+      flashcardId: cardId,
+      studySessionId: this.studySessionId,
+      performanceRating: performanceRating
+    }).subscribe(
+      reviewResponse => {
+        console.log('Review processed successfully', reviewResponse);
+        // Update local state with the new repetition count and intervals as needed
+        card.currentInterval = reviewResponse.newInterval;
+        card.easinessFactor = reviewResponse.newEasinessFactor;
+        card.repetitions = reviewResponse.repetitions;
+        this.buttonsDisabled = false; // Re-enable the buttons
+      },
+      reviewError => {
+        console.error('Failed to process review', reviewError);
+        this.buttonsDisabled = false; // Re-enable the buttons
+      }
     );
   }
 
-
-  endSession(): void {
-    if (this.currentDeck && this.reviewSession.length) {
-      const token = localStorage.getItem('authToken') || '';
-      const reviewedCards = this.reviewSession.filter(card => card.review);
-
-      if (token && reviewedCards.length) {
-        this.apiService.saveSession(token, reviewedCards).subscribe(
-            (response: any) => { // Ideally, replace 'any' with a more specific type
-              // Handle the response here
-              alert('Study session saved.');
-            },
-            (error: any) => { // Ideally, replace 'any' with a more specific type
-              console.error('Failed to save session', error);
-            }
-        );
-      }
+    private calculateNextReviewDate(interval: number): Date {
+        // Calculate the next review date based on the interval
+        const nextReviewDate = new Date();
+        nextReviewDate.setDate(nextReviewDate.getDate() + interval);
+        return nextReviewDate;
     }
 
-    alert('Reset study session.');
-    // Reset session state
-    this.currentDeck = null;
-    this.currentCard = null;
-    this.currentCardIndex = 0;
-    this.reviewSession = [];
-    this.selectedDeckId = null;
+
+  getCurrentUserId(): number | null {
+    const userId = localStorage.getItem('userId');
+    // Check if the retrieved value is not null before parsing
+    return userId ? parseInt(userId) : null;
+  }
+  // Utility method to get current user ID - placeholder for actual implementation
+
+
+  // Utility method to retrieve the current user's token
+  private getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  // End the current study session
+  // End the current study session
+  endStudySession(): void {
+    const token = this.getToken();
+    if (!token) {
+      alert('You must be logged in to end a study session.');
+      return;
+    }
+
+    // Retrieve the session ID from localStorage
+      const storedSessionId = localStorage.getItem('activeStudySessionId');
+      const activeSessionId = storedSessionId ? parseInt(storedSessionId) : null;
+      console.log('!!!! activeSessionId', activeSessionId);
+
+      if (activeSessionId == null || !this.isStudySessionActive) {
+          // 활성화된 학습 세션이 없을 때 메시지가 표시되지 않는 문제를 수정합니다.
+          alert('There is no active study session to end.'); // 학습 세션이 시작되지 않았다는 메시지를 보여줍니다.
+          return;
+      }
+
+    this.apiService.endStudySession(token, activeSessionId).subscribe(
+      (response) => {
+        this.isStudySessionActive = false;
+        this.studySessionId = null;
+        localStorage.removeItem('activeStudySessionId'); // Remove the session ID from localStorage
+        alert('Study session ended successfully.');
+        // Reset session state
+        this.currentDeck = null;
+        this.currentCard = null;
+        this.currentCardIndex = 0;
+        this.reviewSession = [];
+        this.selectedDeckId = null;
+      },
+      (error) => {
+        console.error('Failed to end study session', error);
+      }
+    );
   }
 }
-

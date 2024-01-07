@@ -1,4 +1,102 @@
 /* study.component.css */
+
+
+.nav-btn {
+  background-color: #2e856e; /* A darker shade of green for better contrast */
+  color: white;
+  padding: 10px 20px;
+  margin: 0 10px; /* Increase spacing between buttons */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.nav-btn:hover {
+  background-color: #1f5a4c; /* Even darker shade on hover */
+}
+
+.btn {
+  padding: 10px 20px; /* Uniform padding */
+  font-size: 1rem; /* Standard font size */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Review buttons adjustments for better visibility and usability */
+.btn.success {
+  background-color: #28a745; /* Bootstrap's .btn-success color */
+  color: white;
+}
+
+.btn.success:hover {
+  background-color: #218838; /* A slightly darker green on hover */
+}
+
+/* Specific styles for 'Missed it' button */
+.btn.danger {
+  background-color: #dc3545; /* Bootstrap's .btn-danger color */
+  color: white;
+}
+
+.btn.danger:hover {
+  background-color: #c82333; /* A slightly darker red on hover */
+}
+
+/* Ensure the buttons are properly aligned and spaced */
+.review-buttons {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 10px; /* Ensures there's space between buttons */
+}
+
+/* Align the navigation and review buttons horizontally */
+.card-control-buttons {
+  display: flex;
+  justify-content: center; /* Align buttons in the center */
+  align-items: center;
+  gap: 20px; /* Increase gap between elements */
+}
+
+/* Individual button container for alignment */
+.button-container {
+  display: flex;
+  gap: 20px; /* Adjust spacing between buttons */
+}
+
+/* Adjust this class if it's wrapping your button groups */
+.review-and-answer-buttons {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  align-items: center;
+  gap: 20px; /* Increase gap between elements */
+  margin-top: 20px; /* Add top margin for spacing from card */
+}
+
+/* Ensure the Previous and Next buttons are part of the flex container */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Full width for even spacing */
+}
+
+/* CSS for the Show Answer button */
+.answer-btn {
+  background-color: #ffc107; /* A neutral color for secondary action */
+  color: #212529; /* High contrast color for readability */
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.answer-btn:hover {
+  background-color: #e0a800; /* A slightly darker shade for hover effect */
+}
+
+
 .selection-group {
   margin-right: 20px; /* Adds space between dropdowns */
   width: auto; /* Adjusts width to content or use a specific value like 200px */
@@ -20,13 +118,25 @@
   border: 4px solid #ccc; /* Adjust border color to fit your theme */
 }
 
-.start-btn {
-  margin-top: 20px; /* This ensures there is some space above the start button */
+.session-buttons {
+    border-bottom: 1px solid #ccc; /* Adjust color (#ccc) and thickness (1px) as needed */
+    padding-bottom: 10px; /* Adds some space below the buttons */
+    margin-bottom: 20px; /* Adds some space below the line */
 }
 
-.end-btn {
-  margin-top: 20px; /* This ensures there is some space above the start button */
+.start-study-session-btn {
+  background: mediumseagreen;
+  width: 30%;
+  margin-right: 10px; /* 오른쪽 버튼과의 간격 */
 }
+
+.end-study-btn {
+  background: mediumseagreen;
+  width: 30%;
+  margin-left: 10px; /* 왼쪽 버튼과의 간격 */
+}
+
+
 .selection-group:last-child {
   margin-right: 0;
 }
@@ -47,8 +157,8 @@
     width: 100%; /* Full width dropdowns on smaller screens */
   }
 
-  .start-btn {
-    width: 100%; /* Full width button on smaller screens */
+  .start-study-btn {
+    width: 90%; /* Full width button on smaller screens */
   }
 }
 
@@ -78,14 +188,6 @@
   min-height: 150px; /* Adjust as needed */
 }
 
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 100%; /* Adjust as needed */
-  margin-top: 20px; /* Adjust as needed */
-}
-
-
 .container {
   max-width: 60%;
   margin: 0 auto;
@@ -97,8 +199,12 @@
   font-family: 'Arial', sans-serif;
 }
 
+
 .header_ss {
-  background: #4cae4c;
+    width: 90%; /* 부모 컨테이너의 너비를 100%로 설정합니다 */
+    padding: 0; /* 필요하다면 패딩을 제거합니다 */
+    box-sizing: border-box;
+    background: #4cae4c;
   color: darkorange;
   text-align: center;
   font-size: 2.0rem; /* Adjust the size as necessary */
@@ -156,11 +262,7 @@
   font-size: 1.6rem;
 }
 
-.card-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px; /* Spacing between card and buttons */
-}
+
 
 .card {
   width: 100%;
@@ -180,35 +282,20 @@
   visibility: hidden; /* Hide the placeholder initially */
 }
 
-.start-btn, .answer-btn, .btn, .end-btn {
-  padding: 10px;
-  margin: 30px auto;
-  display: block;
-  width: 20%;
+.start-btn, .end-btn {
+  padding: 10px 20px; /* Uniform padding */
+  font-size: 1rem; /* Standard font size */
   border: none;
   border-radius: 5px;
-  color: white;
   cursor: pointer;
-  font-size: 1.2rem;
+  transition: background-color 0.3s;
 }
 
 .spacer {
   width: 30px; /* 원하는 간격 크기 설정 */
 }
 
-.start-btn {
-  margin-left: 20px;
-  background-color: seagreen;
-}
 
-.end-btn {
-  margin-left: 15px;
-  background-color: darkolivegreen;
-}
-
-.answer-btn {
-  background-color: chocolate;
-}
 
 
 button {
@@ -229,44 +316,36 @@ button:hover {
   background-color: #4cae4c; /* Darker green on hover for visual feedback */
 }
 
-.review-buttons {
+.session-buttons {
+  width: 100%;
   display: flex;
+  margin-left: 20px;
+  margin-right: 20px;
   justify-content: space-between;
   margin-bottom: 10px; /* Spacing between buttons and the 'End Session' button */
 }
 
-.nav-btn {
-  position: absolute;
-  height: 70px;
-  top: 50%;
-  background-color: darkslategray;
-  transform: translateY(-50%);
-  z-index: 1; /* Lower than the study container to allow overlap */
-}
+
+
 
 .prev-btn {
   left: 10%;
   text-align: left;
   font-weight: bold;
-  font-size: 1.5rem
+  font-size: 1.2rem
 }
 
 .next-btn {
   right: 10%;
   text-align: right;
   font-weight: bold;
-  font-size: 1.5rem
+  font-size: 1.2rem
 }
 
 .end-session-spacing {
   display: none; /* Remove if not needed */
 }
 
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px; /* Adjust as needed */
-}
 
 .end-session-container {
   width: 30%;
@@ -274,22 +353,7 @@ button:hover {
   text-align: center;
 }
 
-.button-container {
-  display: flex;
-  justify-content: space-between;
-}
 
-.button-container .btn {
-  flex-basis: 45%; /* Adjust the width of the buttons */
-}
-
-.btn.success {
-  background-color: darkorange;
-}
-
-.btn.danger {
-  background-color: darkgoldenrod;
-}
 
 .btn.grey-out {
   background-color: #ccc; /* Or any grey color you prefer */

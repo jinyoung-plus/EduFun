@@ -30,6 +30,10 @@ export class SignupComponent implements OnInit {
       next: (_response) => {
         // 회원가입 성공 메시지 표시
         alert('Registration successful! Redirecting to login page.');
+
+        // 회원가입에 사용된 이메일을 localStorage에 저장합니다.
+        localStorage.setItem('signupEmail', this.signupData.email);
+
         this.router.navigate(['/login']);
       },
       error: (error) => {

@@ -4,3 +4,21 @@
     margin-left: 5%;
     margin-right: 5%;
 }
+
+/* 버튼 기본 스타일 */
+.button {
+  padding: 10px 20px;
+  font-size: 20px; /* 폰트 크기 조절 */
+  color: #fff;
+  background-color: forestgreen; /* 버튼 배경 색상 */
+  border: none;
+  border-radius: 5px; /* 버튼 둥근 모서리 */
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s; /* 호버 애니메이션 */
+}
+
+/* 호버 시 버튼 스타일 */
+.button:hover {
+  background-color: lightseagreen; /* 버튼 호버 색상 */
+}

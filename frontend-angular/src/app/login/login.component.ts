@@ -23,6 +23,14 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // localStorage에서 signupEmail 값을 가져옵니다.
+    const signupEmail = localStorage.getItem('signupEmail');
+    if (signupEmail) {
+      this.loginData.email = signupEmail;
+
+      // 더 이상 필요하지 않으므로 signupEmail을 localStorage에서 삭제합니다.
+      localStorage.removeItem('signupEmail');
+    }
   }
 
   onLogin(): void {
